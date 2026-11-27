@@ -404,7 +404,7 @@ static func _complete_auction(state):
 	state.auction["last_winner_seat"] = winner_seat
 	state.auction.bought_this_round.append(winner_seat)
 	state.auction.any_plant_sold_this_round = true
-	record_history(state, winner_seat, "Won Plant #" + str(plant_number) + " for " + str(cost) + "E")
+	record_history(state, winner_seat, "Won Plant #" + str(plant_number) + " for " + str(cost) + " Elektro")
 	_advance_phase_two_turn(state)
 
 static func _advance_phase_two_turn(state):
@@ -492,7 +492,7 @@ static func _handle_build_city(state, seat_index, parameters):
 	var max_cities = _max_connected_cities(state)
 	PlantMarket.remove_plants_at_or_below(state, max_cities)
 
-	return { accepted = true, error_code = "", message = "Built " + city_id + " for " + str(total_cost) + "E" }
+	return { accepted = true, error_code = "", message = "Built " + city_id + " for " + str(total_cost) + " Elektro" }
 
 static func _handle_power_plants(state, seat_index, parameters):
 	var player = state.players[seat_index]

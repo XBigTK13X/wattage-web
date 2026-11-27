@@ -169,7 +169,7 @@ func _on_city_tapped(city_id):
 		return
 	var occupancy = _public_state.get("city_occupancy", {}).get(city_id, [])
 	var step = int(_public_state.get("step", 1))
-	var next_cost = "Full" if occupancy.size() >= step else (str(10 + occupancy.size() * 5) + "E")
+	var next_cost = "Full" if occupancy.size() >= step else (str(10 + occupancy.size() * 5) + " Elektro")
 	_inspect_label.text = city.name + " (" + str(city.region_id).capitalize() + ") | Next Slot: " + next_cost + " | Built: " + str(occupancy.size()) + "/" + str(step)
 	var phase = int(_public_state.get("phase", 1))
 	_build_button.visible = (phase == 4 and occupancy.size() < step)

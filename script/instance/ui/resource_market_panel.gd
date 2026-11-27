@@ -78,12 +78,26 @@ func set_state(game_state):
 	for price in ALL_PRICES:
 		var price_cell = VW.Chrome.panel_container(Vector2(0, 34), Color(0.16, 0.19, 0.26, 0.95), Color(0.85, 0.68, 0.25, 0.8))
 		price_cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var price_row = HBoxContainer.new()
+		price_row.alignment = BoxContainer.ALIGNMENT_CENTER
+		price_row.add_theme_constant_override("separation", 3)
+		price_cell.add_child(price_row)
 		var price_label = Label.new()
-		price_label.text = str(price) + "E"
-		price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		price_label.text = str(price)
+		price_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		price_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		price_label.add_theme_font_size_override("font_size", 15)
 		price_label.add_theme_color_override("font_color", Color(0.96, 0.80, 0.28))
-		price_cell.add_child(price_label)
+		price_row.add_child(price_label)
+		var badge_texture = VW.Assets.get_ui_texture("elektro_badge")
+		if badge_texture != null:
+			var badge = TextureRect.new()
+			badge.texture = badge_texture
+			badge.custom_minimum_size = Vector2(16, 16)
+			badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			price_row.add_child(badge)
 		_track_grid.add_child(price_cell)
 
 	var deck_id = str(game_state.get("deck_id", "base_game"))
@@ -151,11 +165,26 @@ func set_state(game_state):
 		var buy_box = VBoxContainer.new()
 		buy_box.add_theme_constant_override("separation", 6)
 		buy_card.add_child(buy_box)
+		var stock_row = HBoxContainer.new()
+		stock_row.alignment = BoxContainer.ALIGNMENT_CENTER
+		stock_row.add_theme_constant_override("separation", 4)
+		buy_box.add_child(stock_row)
 		var stock_label = Label.new()
-		var price_text = (str(next_price) + "E") if next_price != -1 else "Empty"
+		var price_text = str(next_price) if next_price != -1 else "Empty"
 		stock_label.text = resource_type.capitalize() + " (" + str(stock) + ") | Next: " + price_text
-		stock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		buy_box.add_child(stock_label)
+		stock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		stock_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		stock_row.add_child(stock_label)
+		if next_price != -1:
+			var next_badge_texture = VW.Assets.get_ui_texture("elektro_badge")
+			if next_badge_texture != null:
+				var next_badge = TextureRect.new()
+				next_badge.texture = next_badge_texture
+				next_badge.custom_minimum_size = Vector2(16, 16)
+				next_badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				next_badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				next_badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				stock_row.add_child(next_badge)
 		var buy_button = VW.Chrome.styled_button("Buy 1 " + resource_type.capitalize(), 14)
 		buy_button.custom_minimum_size = Vector2(180, 34)
 		buy_button.disabled = not can_buy

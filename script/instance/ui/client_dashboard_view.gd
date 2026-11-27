@@ -33,10 +33,13 @@ func _ready():
 	if elektro_texture != null:
 		var badge = TextureRect.new()
 		badge.texture = elektro_texture
+		badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		badge.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 		elektro_box.add_child(badge)
 
 	_elektro_label = Label.new()
+	_elektro_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_elektro_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_elektro_label.add_theme_font_size_override("font_size", 24)
 	_elektro_label.add_theme_color_override("font_color", Color(0.96, 0.80, 0.28))
 	elektro_box.add_child(_elektro_label)
@@ -95,7 +98,7 @@ func update_state(public_state, private_state):
 	var turn_badge = "YOUR TURN" if is_my_turn else "Waiting"
 
 	_status_label.text = player_name + " (" + turn_badge + ") | Step " + str(step) + " Phase " + str(phase)
-	_elektro_label.text = str(private_state.get("elektro", 0)) + "E"
+	_elektro_label.text = str(private_state.get("elektro", 0))
 
 	var stored = private_state.get("stored_resources", {})
 	_resources_label.text = "Stored Fuel -> Coal: " + str(stored.get("coal", 0)) + " | Oil: " + str(stored.get("oil", 0)) + " | Garbage: " + str(stored.get("garbage", 0)) + " | Uranium: " + str(stored.get("uranium", 0))

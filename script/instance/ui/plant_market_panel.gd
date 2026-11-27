@@ -108,7 +108,7 @@ func _ready():
 
 func _build_payments_card():
 	var card = VW.Chrome.panel_container(Vector2(0, 0), Color(0.14, 0.16, 0.21, 0.96), Color(0.85, 0.68, 0.25, 0.85))
-	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 	var card_layout = VBoxContainer.new()
 	card_layout.add_theme_constant_override("separation", 8)
@@ -126,46 +126,103 @@ func _build_payments_card():
 	header_row.add_child(title_label)
 
 	var legend_label = Label.new()
-	legend_label.text = "Cities Powered -> Elektro Earned"
+	legend_label.text = "Cities Powered | Elektro Earned"
 	legend_label.add_theme_font_size_override("font_size", 13)
 	header_row.add_child(legend_label)
 
 	var grid = GridContainer.new()
 	grid.columns = 7
-	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	grid.add_theme_constant_override("h_separation", 8)
-	grid.add_theme_constant_override("v_separation", 6)
+	grid.add_theme_constant_override("h_separation", 14)
+	grid.add_theme_constant_override("v_separation", 10)
 	card_layout.add_child(grid)
 
+	var bg_texture = VW.Assets.get_ui_texture("payment_cell_bg")
+	var house_texture = VW.Assets.get_token_texture("house_token")
+	var badge_texture = VW.Assets.get_ui_texture("elektro_badge")
 	var payouts = GameEngine.BUREAUCRACY_PAYOUTS
 	for city_count in range(payouts.size()):
-		var cell = VW.Chrome.panel_container(Vector2(0, 42), Color(0.10, 0.12, 0.17, 0.95), Color(0.35, 0.42, 0.54, 0.85))
-		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var cell = Control.new()
+		cell.custom_minimum_size = Vector2(164, 44)
+		if bg_texture != null:
+			var bg = TextureRect.new()
+			bg.texture = bg_texture
+			bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+			bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			bg.stretch_mode = TextureRect.STRETCH_SCALE
+			cell.add_child(bg)
+		else:
+			var fallback_draw = _SlantedCellBackground.new()
+			fallback_draw.set_anchors_preset(Control.PRESET_FULL_RECT)
+			fallback_draw.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			cell.add_child(fallback_draw)
+
 		var cell_row = HBoxContainer.new()
-		cell_row.alignment = BoxContainer.ALIGNMENT_CENTER
-		cell_row.add_theme_constant_override("separation", 8)
+		cell_row.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cell_row.add_theme_constant_override("separation", 0)
 		cell.add_child(cell_row)
 
-		var cities_label = Label.new()
-		cities_label.text = ("20+" if city_count == 20 else str(city_count)) + "C"
-		cities_label.add_theme_font_size_override("font_size", 14)
-		cities_label.add_theme_color_override("font_color", Color(0.80, 0.86, 0.96))
-		cell_row.add_child(cities_label)
+		var left_half = HBoxContainer.new()
+		left_half.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		left_half.alignment = BoxContainer.ALIGNMENT_CENTER
+		left_half.add_theme_constant_override("separation", 5)
+		cell_row.add_child(left_half)
 
-		var arrow_label = Label.new()
-		arrow_label.text = "->"
-		arrow_label.add_theme_font_size_override("font_size", 13)
-		cell_row.add_child(arrow_label)
+		var cities_label = Label.new()
+		cities_label.text = "20+" if city_count == 20 else str(city_count)
+		cities_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		cities_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		cities_label.add_theme_font_size_override("font_size", 15)
+		cities_label.add_theme_color_override("font_color", Color(0.84, 0.90, 0.98))
+		left_half.add_child(cities_label)
+
+		if house_texture != null:
+			var house_icon = TextureRect.new()
+			house_icon.texture = house_texture
+			house_icon.custom_minimum_size = Vector2(18, 18)
+			house_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			house_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			house_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			left_half.add_child(house_icon)
+
+		var right_half = HBoxContainer.new()
+		right_half.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		right_half.alignment = BoxContainer.ALIGNMENT_CENTER
+		right_half.add_theme_constant_override("separation", 5)
+		cell_row.add_child(right_half)
 
 		var payout_label = Label.new()
-		payout_label.text = str(payouts[city_count]) + "E"
+		payout_label.text = str(payouts[city_count])
+		payout_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		payout_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		payout_label.add_theme_font_size_override("font_size", 15)
 		payout_label.add_theme_color_override("font_color", Color(0.96, 0.80, 0.28))
-		cell_row.add_child(payout_label)
+		right_half.add_child(payout_label)
+
+		if badge_texture != null:
+			var badge = TextureRect.new()
+			badge.texture = badge_texture
+			badge.custom_minimum_size = Vector2(18, 18)
+			badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			right_half.add_child(badge)
 
 		grid.add_child(cell)
 
 	return card
+
+class _SlantedCellBackground extends Control:
+	func _draw():
+		var cell_width = size.x
+		var cell_height = size.y
+		if cell_width <= 0 or cell_height <= 0:
+			return
+		var mid_top = cell_width * 0.51
+		var mid_bot = cell_width * 0.43
+		draw_colored_polygon(PackedVector2Array([Vector2(0, 0), Vector2(mid_top, 0), Vector2(mid_bot, cell_height), Vector2(0, cell_height)]), Color(0.14, 0.21, 0.32, 0.98))
+		draw_colored_polygon(PackedVector2Array([Vector2(mid_top, 0), Vector2(cell_width, 0), Vector2(cell_width, cell_height), Vector2(mid_bot, cell_height)]), Color(0.24, 0.18, 0.09, 0.98))
+		draw_line(Vector2(mid_top, 0), Vector2(mid_bot, cell_height), Color(0.88, 0.71, 0.28, 1.0), 2.0, true)
+		draw_rect(Rect2(Vector2(1, 1), Vector2(cell_width - 2, cell_height - 2)), Color(0.53, 0.63, 0.78, 0.95), false, 2.0)
 
 func set_state(game_state):
 	_game_state = game_state
@@ -202,7 +259,7 @@ func set_state(game_state):
 		var bidder_name = players[high_bidder_seat].player_name if high_bidder_seat >= 0 and high_bidder_seat < players.size() else "None"
 		var active_bidder_name = active_player.player_name if active_player != null else "None"
 		var passed_seats = auction.get("passed_seats", [])
-		_auction_info_label.text = "Auctioning Plant #" + str(auction.get("plant_number", 0)) + " | High Bid: " + str(current_bid) + "E (" + bidder_name + ") | Waiting on: " + active_bidder_name + " | Passed: " + str(passed_seats.size())
+		_auction_info_label.text = "Auctioning Plant #" + str(auction.get("plant_number", 0)) + " | High Bid: " + str(current_bid) + " Elektro (" + bidder_name + ") | Waiting on: " + active_bidder_name + " | Passed: " + str(passed_seats.size())
 		_bid_one_button.disabled = not is_local_turn or active_elektro < current_bid + 1
 		_bid_five_button.disabled = not is_local_turn or active_elektro < current_bid + 5
 		_pass_button.disabled = not is_local_turn

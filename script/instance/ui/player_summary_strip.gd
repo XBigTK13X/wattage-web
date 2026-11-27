@@ -76,10 +76,53 @@ func set_state(game_state):
 		name_label.add_theme_font_size_override("font_size", 17)
 		name_row.add_child(name_label)
 
+		var elektro_row = HBoxContainer.new()
+		elektro_row.add_theme_constant_override("separation", 6)
+		left_box.add_child(elektro_row)
+
+		var city_total = GameEngine.player_city_count(player)
+		var elektro_label = Label.new()
+		elektro_label.text = str(player.elektro)
+		elektro_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		elektro_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		elektro_label.add_theme_color_override("font_color", Color(0.96, 0.80, 0.28))
+		elektro_row.add_child(elektro_label)
+
+		var badge_texture = VW.Assets.get_ui_texture("elektro_badge")
+		if badge_texture != null:
+			var badge = TextureRect.new()
+			badge.texture = badge_texture
+			badge.custom_minimum_size = Vector2(18, 18)
+			badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			elektro_row.add_child(badge)
+
+		var separator_label = Label.new()
+		separator_label.text = " | "
+		separator_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		separator_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		elektro_row.add_child(separator_label)
+
+		var cities_label = Label.new()
+		cities_label.text = str(city_total)
+		cities_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		cities_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		elektro_row.add_child(cities_label)
+
+		var house_texture = VW.Assets.get_token_texture("house_token")
+		if house_texture != null:
+			var house_icon = TextureRect.new()
+			house_icon.texture = house_texture
+			house_icon.custom_minimum_size = Vector2(18, 18)
+			house_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			house_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			house_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			elektro_row.add_child(house_icon)
+
 		var stats_label = Label.new()
 		var stored = player.get("stored_resources", {})
-		var city_total = GameEngine.player_city_count(player)
-		stats_label.text = "Elektro: " + str(player.elektro) + "E | Cities: " + str(city_total) + "\nFuel: Coal " + str(int(stored.get("coal", 0))) + ", Oil " + str(int(stored.get("oil", 0))) + ", Garbage " + str(int(stored.get("garbage", 0))) + ", Uranium " + str(int(stored.get("uranium", 0)))
+		stats_label.text = "Fuel: Coal " + str(int(stored.get("coal", 0))) + ", Oil " + str(int(stored.get("oil", 0))) + ", Garbage " + str(int(stored.get("garbage", 0))) + ", Uranium " + str(int(stored.get("uranium", 0)))
 		left_box.add_child(stats_label)
 
 		var plants_row = HBoxContainer.new()
