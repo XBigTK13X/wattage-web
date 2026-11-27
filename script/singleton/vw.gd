@@ -11,6 +11,7 @@ var EventLog
 var Loading
 var Log
 var Math
+var Network
 var Scenes
 var Settings
 
@@ -39,4 +40,5 @@ func reset():
 	Chrome = _singleton("chrome")
 	Database = _singleton("database")
 	Loading = _singleton("loading")
+	Network = _singleton("network")
 	Scenes = _singleton("scenes")
