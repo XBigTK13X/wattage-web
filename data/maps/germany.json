@@ -1140,5 +1140,9 @@
     "se": "osnabruck",
     "nw": "passau"
   },
-  "rule_overrides": {}
+  "rule_overrides": {},
+  "render_size": [
+    1279,
+    1634
+  ]
 }

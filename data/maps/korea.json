@@ -150,5 +150,9 @@
   "cities": [],
   "connections": [],
   "automa_start_cities": {},
-  "rule_overrides": {}
+  "rule_overrides": {},
+  "render_size": [
+    1200,
+    820
+  ]
 }

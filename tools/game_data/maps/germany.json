@@ -1,0 +1,1148 @@
+{
+  "id": "germany",
+  "display_name": "Germany",
+  "start_resources": [
+    1,
+    3,
+    7,
+    14
+  ],
+  "player_count_info": {
+    "2": {
+      "regions": 3,
+      "removed_plants": 8,
+      "max_plants": 4,
+      "step_two_cities": 10,
+      "end_game_cities": 21,
+      "refill": [
+        [
+          3,
+          2,
+          1,
+          1
+        ],
+        [
+          4,
+          2,
+          2,
+          1
+        ],
+        [
+          3,
+          4,
+          3,
+          1
+        ]
+      ]
+    },
+    "3": {
+      "regions": 3,
+      "removed_plants": 8,
+      "max_plants": 3,
+      "step_two_cities": 7,
+      "end_game_cities": 17,
+      "refill": [
+        [
+          4,
+          2,
+          1,
+          1
+        ],
+        [
+          5,
+          3,
+          2,
+          1
+        ],
+        [
+          3,
+          4,
+          3,
+          1
+        ]
+      ]
+    },
+    "4": {
+      "regions": 4,
+      "removed_plants": 4,
+      "max_plants": 3,
+      "step_two_cities": 7,
+      "end_game_cities": 17,
+      "refill": [
+        [
+          5,
+          3,
+          2,
+          1
+        ],
+        [
+          6,
+          4,
+          3,
+          2
+        ],
+        [
+          4,
+          5,
+          4,
+          2
+        ]
+      ]
+    },
+    "5": {
+      "regions": 5,
+      "removed_plants": 0,
+      "max_plants": 3,
+      "step_two_cities": 7,
+      "end_game_cities": 15,
+      "refill": [
+        [
+          5,
+          4,
+          3,
+          2
+        ],
+        [
+          7,
+          5,
+          3,
+          3
+        ],
+        [
+          5,
+          6,
+          5,
+          2
+        ]
+      ]
+    },
+    "6": {
+      "regions": 5,
+      "removed_plants": 0,
+      "max_plants": 3,
+      "step_two_cities": 6,
+      "end_game_cities": 14,
+      "refill": [
+        [
+          7,
+          5,
+          3,
+          2
+        ],
+        [
+          9,
+          6,
+          5,
+          3
+        ],
+        [
+          6,
+          7,
+          6,
+          3
+        ]
+      ]
+    }
+  },
+  "regions": {
+    "region_1": {
+      "name": "Region 1",
+      "color": "#3a7ca5"
+    },
+    "region_2": {
+      "name": "Region 2",
+      "color": "#8f5d9c"
+    },
+    "region_3": {
+      "name": "Region 3",
+      "color": "#d97724"
+    },
+    "region_4": {
+      "name": "Region 4",
+      "color": "#c94c4c"
+    },
+    "region_5": {
+      "name": "Region 5",
+      "color": "#4a8f5c"
+    },
+    "region_6": {
+      "name": "Region 6",
+      "color": "#c7a328"
+    }
+  },
+  "region_connections": [
+    [
+      "region_1",
+      "region_2"
+    ],
+    [
+      "region_1",
+      "region_3"
+    ],
+    [
+      "region_1",
+      "region_4"
+    ],
+    [
+      "region_2",
+      "region_4"
+    ],
+    [
+      "region_3",
+      "region_4"
+    ],
+    [
+      "region_3",
+      "region_5"
+    ],
+    [
+      "region_4",
+      "region_5"
+    ],
+    [
+      "region_4",
+      "region_6"
+    ],
+    [
+      "region_5",
+      "region_6"
+    ]
+  ],
+  "cities": [
+    {
+      "id": "flensburg",
+      "name": "Flensburg",
+      "region_id": "region_1",
+      "position": [
+        0.443784,
+        0.0612
+      ],
+      "max_connections": 1
+    },
+    {
+      "id": "kiel",
+      "name": "Kiel",
+      "region_id": "region_1",
+      "position": [
+        0.544957,
+        0.146512
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "lubeck",
+      "name": "Lubeck",
+      "region_id": "region_1",
+      "position": [
+        0.635653,
+        0.213892
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "rostock",
+      "name": "Rostock",
+      "region_id": "region_2",
+      "position": [
+        0.785536,
+        0.210343
+      ],
+      "max_connections": 2
+    },
+    {
+      "id": "cuxhaven",
+      "name": "Cuxhaven",
+      "region_id": "region_1",
+      "position": [
+        0.455981,
+        0.216952
+      ],
+      "max_connections": 2
+    },
+    {
+      "id": "hamburg",
+      "name": "Hamburg",
+      "region_id": "region_1",
+      "position": [
+        0.554574,
+        0.284088
+      ],
+      "max_connections": 6
+    },
+    {
+      "id": "schwerin",
+      "name": "Schwerin",
+      "region_id": "region_2",
+      "position": [
+        0.70516,
+        0.29743
+      ],
+      "max_connections": 7
+    },
+    {
+      "id": "torgelow",
+      "name": "Torgelow",
+      "region_id": "region_2",
+      "position": [
+        0.856529,
+        0.286781
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "wilhelmshaven",
+      "name": "Wilhelmshaven",
+      "region_id": "region_1",
+      "position": [
+        0.363565,
+        0.280845
+      ],
+      "max_connections": 2
+    },
+    {
+      "id": "bremen",
+      "name": "Bremen",
+      "region_id": "region_1",
+      "position": [
+        0.461923,
+        0.34235
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "osnabruck",
+      "name": "Osnabruck",
+      "region_id": "region_3",
+      "position": [
+        0.37631,
+        0.409486
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "hannover",
+      "name": "Hannover",
+      "region_id": "region_1",
+      "position": [
+        0.562783,
+        0.416095
+      ],
+      "max_connections": 7
+    },
+    {
+      "id": "madgeburg",
+      "name": "Madgeburg",
+      "region_id": "region_2",
+      "position": [
+        0.706333,
+        0.393635
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "berlin",
+      "name": "Berlin",
+      "region_id": "region_2",
+      "position": [
+        0.829476,
+        0.389412
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "frankfurt-o",
+      "name": "Frankfurt O",
+      "region_id": "region_2",
+      "position": [
+        0.906177,
+        0.465789
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "duisburg",
+      "name": "Duisburg",
+      "region_id": "region_3",
+      "position": [
+        0.139093,
+        0.439535
+      ],
+      "max_connections": 1
+    },
+    {
+      "id": "essen",
+      "name": "Essen",
+      "region_id": "region_3",
+      "position": [
+        0.253714,
+        0.522889
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "munster",
+      "name": "Munster",
+      "region_id": "region_3",
+      "position": [
+        0.252306,
+        0.45355
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "dortmund",
+      "name": "Dortmund",
+      "region_id": "region_3",
+      "position": [
+        0.328147,
+        0.547613
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "kassel",
+      "name": "Kassel",
+      "region_id": "region_3",
+      "position": [
+        0.480375,
+        0.526928
+      ],
+      "max_connections": 6
+    },
+    {
+      "id": "erfurt",
+      "name": "Erfurt",
+      "region_id": "region_4",
+      "position": [
+        0.654574,
+        0.552264
+      ],
+      "max_connections": 6
+    },
+    {
+      "id": "halle",
+      "name": "Halle",
+      "region_id": "region_4",
+      "position": [
+        0.725567,
+        0.475398
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "leipzig",
+      "name": "Leipzig",
+      "region_id": "region_4",
+      "position": [
+        0.804691,
+        0.534027
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "dresden",
+      "name": "Dresden",
+      "region_id": "region_4",
+      "position": [
+        0.872088,
+        0.581579
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "dusseldorf",
+      "name": "Dusseldorf",
+      "region_id": "region_3",
+      "position": [
+        0.155356,
+        0.576744
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "aachen",
+      "name": "Aachen",
+      "region_id": "region_5",
+      "position": [
+        0.093823,
+        0.644737
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "koln",
+      "name": "Koln",
+      "region_id": "region_5",
+      "position": [
+        0.232291,
+        0.642411
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "fulda",
+      "name": "Fulda",
+      "region_id": "region_4",
+      "position": [
+        0.543628,
+        0.603611
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "frankfurt-m",
+      "name": "Frankfurt M",
+      "region_id": "region_5",
+      "position": [
+        0.416888,
+        0.635924
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "wiesbaden",
+      "name": "Wiesbaden",
+      "region_id": "region_5",
+      "position": [
+        0.30821,
+        0.697613
+      ],
+      "max_connections": 5
+    },
+    {
+      "id": "wurzburg",
+      "name": "Wurzburg",
+      "region_id": "region_4",
+      "position": [
+        0.52025,
+        0.727356
+      ],
+      "max_connections": 6
+    },
+    {
+      "id": "trier",
+      "name": "Trier",
+      "region_id": "region_5",
+      "position": [
+        0.148163,
+        0.743146
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "nurnberg",
+      "name": "Nurnberg",
+      "region_id": "region_4",
+      "position": [
+        0.641751,
+        0.737393
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "saarbrucken",
+      "name": "Saarbrucken",
+      "region_id": "region_5",
+      "position": [
+        0.263565,
+        0.797001
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "mannheim",
+      "name": "Mannheim",
+      "region_id": "region_5",
+      "position": [
+        0.390227,
+        0.741554
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "stuttgart",
+      "name": "Stuttgart",
+      "region_id": "region_6",
+      "position": [
+        0.41079,
+        0.844125
+      ],
+      "max_connections": 6
+    },
+    {
+      "id": "augsburg",
+      "name": "Augsburg",
+      "region_id": "region_6",
+      "position": [
+        0.578421,
+        0.842289
+      ],
+      "max_connections": 6
+    },
+    {
+      "id": "regensburg",
+      "name": "Regensburg",
+      "region_id": "region_6",
+      "position": [
+        0.709382,
+        0.797185
+      ],
+      "max_connections": 4
+    },
+    {
+      "id": "freiburg",
+      "name": "Freiburg",
+      "region_id": "region_6",
+      "position": [
+        0.307349,
+        0.934394
+      ],
+      "max_connections": 2
+    },
+    {
+      "id": "konstanz",
+      "name": "Konstanz",
+      "region_id": "region_6",
+      "position": [
+        0.446286,
+        0.938678
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "munchen",
+      "name": "Munchen",
+      "region_id": "region_6",
+      "position": [
+        0.700156,
+        0.924174
+      ],
+      "max_connections": 3
+    },
+    {
+      "id": "passau",
+      "name": "Passau",
+      "region_id": "region_6",
+      "position": [
+        0.808522,
+        0.863341
+      ],
+      "max_connections": 2
+    }
+  ],
+  "connections": [
+    {
+      "from": "flensburg",
+      "direction": "se",
+      "to": "kiel",
+      "cost": 4
+    },
+    {
+      "from": "kiel",
+      "direction": "se",
+      "to": "lubeck",
+      "cost": 4
+    },
+    {
+      "from": "kiel",
+      "direction": "s",
+      "to": "hamburg",
+      "cost": 8
+    },
+    {
+      "from": "hamburg",
+      "direction": "ne",
+      "to": "lubeck",
+      "cost": 6
+    },
+    {
+      "from": "hamburg",
+      "direction": "e",
+      "to": "schwerin",
+      "cost": 8
+    },
+    {
+      "from": "hamburg",
+      "direction": "s",
+      "to": "hannover",
+      "cost": 17
+    },
+    {
+      "from": "hamburg",
+      "direction": "sw",
+      "to": "bremen",
+      "cost": 11
+    },
+    {
+      "from": "hamburg",
+      "direction": "nw",
+      "to": "cuxhaven",
+      "cost": 11
+    },
+    {
+      "from": "hannover",
+      "direction": "ne",
+      "to": "schwerin",
+      "cost": 19
+    },
+    {
+      "from": "hannover",
+      "direction": "e",
+      "to": "madgeburg",
+      "cost": 15
+    },
+    {
+      "from": "hannover",
+      "direction": "se",
+      "to": "erfurt",
+      "cost": 19
+    },
+    {
+      "from": "hannover",
+      "direction": "sw",
+      "to": "kassel",
+      "cost": 15
+    },
+    {
+      "from": "hannover",
+      "direction": "w",
+      "to": "osnabruck",
+      "cost": 16
+    },
+    {
+      "from": "hannover",
+      "direction": "nw",
+      "to": "bremen",
+      "cost": 10
+    },
+    {
+      "from": "cuxhaven",
+      "direction": "s",
+      "to": "bremen",
+      "cost": 8
+    },
+    {
+      "from": "bremen",
+      "direction": "sw",
+      "to": "osnabruck",
+      "cost": 11
+    },
+    {
+      "from": "bremen",
+      "direction": "nw",
+      "to": "wilhelmshaven",
+      "cost": 11
+    },
+    {
+      "from": "wilhelmshaven",
+      "direction": "s",
+      "to": "osnabruck",
+      "cost": 14
+    },
+    {
+      "from": "lubeck",
+      "direction": "se",
+      "to": "schwerin",
+      "cost": 6
+    },
+    {
+      "from": "schwerin",
+      "direction": "ne",
+      "to": "rostock",
+      "cost": 6
+    },
+    {
+      "from": "schwerin",
+      "direction": "e",
+      "to": "torgelow",
+      "cost": 19
+    },
+    {
+      "from": "schwerin",
+      "direction": "se",
+      "to": "berlin",
+      "cost": 18
+    },
+    {
+      "from": "schwerin",
+      "direction": "s",
+      "to": "madgeburg",
+      "cost": 16
+    },
+    {
+      "from": "rostock",
+      "direction": "se",
+      "to": "torgelow",
+      "cost": 19
+    },
+    {
+      "from": "torgelow",
+      "direction": "s",
+      "to": "berlin",
+      "cost": 15
+    },
+    {
+      "from": "madgeburg",
+      "direction": "e",
+      "to": "berlin",
+      "cost": 10
+    },
+    {
+      "from": "madgeburg",
+      "direction": "s",
+      "to": "halle",
+      "cost": 11
+    },
+    {
+      "from": "berlin",
+      "direction": "se",
+      "to": "frankfurt-o",
+      "cost": 6
+    },
+    {
+      "from": "berlin",
+      "direction": "sw",
+      "to": "halle",
+      "cost": "17"
+    },
+    {
+      "from": "frankfurt-o",
+      "direction": "s",
+      "to": "dresden",
+      "cost": 16
+    },
+    {
+      "from": "frankfurt-o",
+      "direction": "sw",
+      "to": "leipzig",
+      "cost": 21
+    },
+    {
+      "from": "osnabruck",
+      "direction": "se",
+      "to": "kassel",
+      "cost": 18
+    },
+    {
+      "from": "osnabruck",
+      "direction": "sw",
+      "to": "munster",
+      "cost": 7
+    },
+    {
+      "from": "munster",
+      "direction": "s",
+      "to": "dortmund",
+      "cost": 2
+    },
+    {
+      "from": "munster",
+      "direction": "se",
+      "to": "essen",
+      "cost": 6
+    },
+    {
+      "from": "essen",
+      "direction": "e",
+      "to": "dortmund",
+      "cost": 4
+    },
+    {
+      "from": "essen",
+      "direction": "sw",
+      "to": "dusseldorf",
+      "cost": 2
+    },
+    {
+      "from": "essen",
+      "direction": "nw",
+      "to": "duisburg",
+      "cost": 0
+    },
+    {
+      "from": "dusseldorf",
+      "direction": "se",
+      "to": "koln",
+      "cost": 4
+    },
+    {
+      "from": "dusseldorf",
+      "direction": "sw",
+      "to": "aachen",
+      "cost": 9
+    },
+    {
+      "from": "dortmund",
+      "direction": "e",
+      "to": "kassel",
+      "cost": 18
+    },
+    {
+      "from": "dortmund",
+      "direction": "se",
+      "to": "frankfurt-m",
+      "cost": 20
+    },
+    {
+      "from": "dortmund",
+      "direction": "sw",
+      "to": "koln",
+      "cost": 10
+    },
+    {
+      "from": "kassel",
+      "direction": "e",
+      "to": "erfurt",
+      "cost": 15
+    },
+    {
+      "from": "kassel",
+      "direction": "se",
+      "to": "fulda",
+      "cost": 8
+    },
+    {
+      "from": "kassel",
+      "direction": "sw",
+      "to": "frankfurt-m",
+      "cost": 13
+    },
+    {
+      "from": "halle",
+      "direction": "se",
+      "to": "leipzig",
+      "cost": 0
+    },
+    {
+      "from": "halle",
+      "direction": "sw",
+      "to": "erfurt",
+      "cost": 6
+    },
+    {
+      "from": "leipzig",
+      "direction": "se",
+      "to": "dresden",
+      "cost": 13
+    },
+    {
+      "from": "dresden",
+      "direction": "w",
+      "to": "erfurt",
+      "cost": 19
+    },
+    {
+      "from": "erfurt",
+      "direction": "s",
+      "to": "nurnberg",
+      "cost": 21
+    },
+    {
+      "from": "erfurt",
+      "direction": "sw",
+      "to": "fulda",
+      "cost": 13
+    },
+    {
+      "from": "fulda",
+      "direction": "s",
+      "to": "wurzburg",
+      "cost": 11
+    },
+    {
+      "from": "fulda",
+      "direction": "sw",
+      "to": "frankfurt-m",
+      "cost": 8
+    },
+    {
+      "from": "wurzburg",
+      "direction": "se",
+      "to": "nurnberg",
+      "cost": 8
+    },
+    {
+      "from": "wurzburg",
+      "direction": "se",
+      "to": "augsburg",
+      "cost": 19
+    },
+    {
+      "from": "wurzburg",
+      "direction": "w",
+      "to": "mannheim",
+      "cost": 10
+    },
+    {
+      "from": "wurzburg",
+      "direction": "sw",
+      "to": "stuttgart",
+      "cost": 12
+    },
+    {
+      "from": "wurzburg",
+      "direction": "nw",
+      "to": "frankfurt-m",
+      "cost": 13
+    },
+    {
+      "from": "nurnberg",
+      "direction": "se",
+      "to": "regensburg",
+      "cost": 12
+    },
+    {
+      "from": "nurnberg",
+      "direction": "sw",
+      "to": "augsburg",
+      "cost": 18
+    },
+    {
+      "from": "koln",
+      "direction": "se",
+      "to": "wiesbaden",
+      "cost": 21
+    },
+    {
+      "from": "koln",
+      "direction": "sw",
+      "to": "trier",
+      "cost": 20
+    },
+    {
+      "from": "koln",
+      "direction": "w",
+      "to": "aachen",
+      "cost": 7
+    },
+    {
+      "from": "aachen",
+      "direction": "s",
+      "to": "trier",
+      "cost": 19
+    },
+    {
+      "from": "trier",
+      "direction": "ne",
+      "to": "wiesbaden",
+      "cost": 18
+    },
+    {
+      "from": "trier",
+      "direction": "se",
+      "to": "saarbrucken",
+      "cost": 11
+    },
+    {
+      "from": "wiesbaden",
+      "direction": "ne",
+      "to": "frankfurt-m",
+      "cost": 0
+    },
+    {
+      "from": "wiesbaden",
+      "direction": "se",
+      "to": "mannheim",
+      "cost": 11
+    },
+    {
+      "from": "wiesbaden",
+      "direction": "sw",
+      "to": "saarbrucken",
+      "cost": 10
+    },
+    {
+      "from": "saarbrucken",
+      "direction": "ne",
+      "to": "mannheim",
+      "cost": 11
+    },
+    {
+      "from": "saarbrucken",
+      "direction": "se",
+      "to": "stuttgart",
+      "cost": 17
+    },
+    {
+      "from": "mannheim",
+      "direction": "s",
+      "to": "stuttgart",
+      "cost": 6
+    },
+    {
+      "from": "stuttgart",
+      "direction": "e",
+      "to": "augsburg",
+      "cost": 15
+    },
+    {
+      "from": "stuttgart",
+      "direction": "s",
+      "to": "konstanz",
+      "cost": 16
+    },
+    {
+      "from": "stuttgart",
+      "direction": "sw",
+      "to": "freiburg",
+      "cost": 16
+    },
+    {
+      "from": "freiburg",
+      "direction": "e",
+      "to": "konstanz",
+      "cost": 14
+    },
+    {
+      "from": "konstanz",
+      "direction": "ne",
+      "to": "augsburg",
+      "cost": 17
+    },
+    {
+      "from": "augsburg",
+      "direction": "ne",
+      "to": "regensburg",
+      "cost": 13
+    },
+    {
+      "from": "augsburg",
+      "direction": "se",
+      "to": "munchen",
+      "cost": 6
+    },
+    {
+      "from": "munchen",
+      "direction": "n",
+      "to": "regensburg",
+      "cost": 10
+    },
+    {
+      "from": "munchen",
+      "direction": "ne",
+      "to": "passau",
+      "cost": 14
+    },
+    {
+      "from": "passau",
+      "direction": "nw",
+      "to": "regensburg",
+      "cost": 12
+    }
+  ],
+  "automa_start_cities": {
+    "e": "aachen",
+    "w": "dresden",
+    "n": "konstanz",
+    "s": "flensburg",
+    "ne": "freiburg",
+    "sw": "torgelow",
+    "se": "osnabruck",
+    "nw": "passau"
+  },
+  "rule_overrides": {},
+  "render_size": [
+    1279,
+    1634
+  ]
+}

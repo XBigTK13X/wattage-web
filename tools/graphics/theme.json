@@ -1,0 +1,55 @@
+{
+  "palette": {
+    "bg_deep": "#0f141c",
+    "bg_panel": "#1a202c",
+    "bg_panel_alt": "#222938",
+    "bg_button_normal": "#2e384c",
+    "bg_button_hover": "#3e4a63",
+    "bg_button_pressed": "#212938",
+    "bg_button_disabled": "#22262e",
+    "border_brass": "#d8ad40",
+    "border_brass_bright": "#f5ce5c",
+    "border_brass_dark": "#8c6e1e",
+    "border_steel": "#8ca0be",
+    "border_muted": "#606672",
+    "text_primary": "#f0f4fa",
+    "text_secondary": "#b8c4d8",
+    "text_accent": "#f5c542",
+    "text_dark": "#141820",
+    "card_bg": "#1e2534",
+    "card_step3_bg": "#362a18",
+    "map_ocean": "#0d131b",
+    "map_grid": "#192332",
+    "map_edge_casing": "#0c1017",
+    "map_edge_line": "#738aa8"
+  },
+  "strokes": {
+    "thin": 1.5,
+    "normal": 2.5,
+    "thick": 3.5,
+    "card_border": 3.0,
+    "focus_ring": 4.0
+  },
+  "radii": {
+    "small": 6,
+    "medium": 10,
+    "large": 14,
+    "card": 12
+  },
+  "shadow": {
+    "dx": 0,
+    "dy": 2,
+    "std_deviation": 2.2,
+    "color": "#000000",
+    "opacity": 0.45
+  },
+  "typography": {
+    "font_family": "DejaVu Sans, Liberation Sans, Arial, sans-serif",
+    "mono_family": "DejaVu Sans Mono, Liberation Mono, monospace"
+  },
+  "scales": {
+    "1x": 1.0,
+    "2x": 2.0,
+    "4x": 4.0
+  }
+}

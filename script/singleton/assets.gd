@@ -1,22 +1,9 @@
 extends Node
 
-const PLAYER_COLORS = {
-	"red": Color(0.84, 0.22, 0.20, 1.0),
-	"blue": Color(0.20, 0.48, 0.86, 1.0),
-	"green": Color(0.22, 0.68, 0.34, 1.0),
-	"yellow": Color(0.92, 0.76, 0.18, 1.0),
-	"purple": Color(0.62, 0.32, 0.78, 1.0),
-	"black": Color(0.16, 0.17, 0.20, 1.0)
-}
+const GameConstants = preload("res://script/generated/game_constants.gd")
 
-const RESOURCE_COLORS = {
-	"coal": Color(0.42, 0.26, 0.16, 1.0),
-	"oil": Color(0.14, 0.16, 0.20, 1.0),
-	"garbage": Color(0.76, 0.68, 0.20, 1.0),
-	"uranium": Color(0.84, 0.20, 0.24, 1.0),
-	"ecological": Color(0.24, 0.72, 0.45, 1.0),
-	"step3": Color(0.70, 0.74, 0.80, 1.0)
-}
+const PLAYER_COLORS = GameConstants.PLAYER_COLORS
+const RESOURCE_COLORS = GameConstants.RESOURCE_COLORS
 
 var _house_textures = {}
 var _resource_textures = {}
