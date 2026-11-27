@@ -1,5 +1,8 @@
 extends Control
 
+const GameEngine = preload("res://script/instance/rules/game_engine.gd")
+const AutomaController = preload("res://script/instance/rules/automa_controller.gd")
+const NetworkProtocol = preload("res://script/instance/network/protocol.gd")
 const MapBoardView = preload("res://script/instance/ui/map_board_view.gd")
 const PlantMarketPanel = preload("res://script/instance/ui/plant_market_panel.gd")
 const ResourceMarketPanel = preload("res://script/instance/ui/resource_market_panel.gd")
@@ -86,91 +89,45 @@ func _build_gui():
 	root_box.add_child(_player_strip)
 
 func _refresh_all():
+	var guard_steps = 0
+	while not bool(_game_state.get("finished", false)) and guard_steps < 12 and AutomaController.take_turn_if_automa(_game_state):
+		guard_steps += 1
 	_map_view.set_state(_map_definition, _game_state)
 	_plant_market_panel.set_state(_game_state)
 	_resource_market_panel.set_state(_game_state)
 	_player_strip.set_state(_game_state)
+	if bool(_game_state.get("finished", false)):
+		PlayerSummaryStrip.show_end_game_modal(self, _game_state)
 
 func _active_seat():
-	var order = _game_state.get("turn_order", [])
-	var position = int(_game_state.get("active_turn_position", 0))
-	if position >= 0 and position < order.size():
-		return int(order[position])
-	return 0
+	return GameEngine.active_seat(_game_state)
+
+func _commit_local_action(action_name, parameters = {}):
+	var seat = _active_seat()
+	var result = GameEngine.apply_action(_game_state, seat, action_name, parameters)
+	if result.accepted:
+		VW.GameLibrary.save_active_game()
+		VW.Network.broadcast_state()
+		_refresh_all()
+	return result
 
 func _on_plant_nominated(plant_number):
-	_game_state.phase = 2
-	_game_state.auction = {
-		active = true,
-		plant_number = plant_number,
-		current_bid = plant_number,
-		high_bidder_seat = _active_seat(),
-		passed_seats = []
-	}
-	VW.GameLibrary.save_active_game()
-	_refresh_all()
+	_commit_local_action(NetworkProtocol.ACTION_SELECT_PLANT_FOR_AUCTION, { plant_number = plant_number })
 
 func _on_bid_placed(increment):
-	if not _game_state.auction.active:
-		return
-	_game_state.auction.current_bid += int(increment)
-	var next_seat = (_game_state.auction.high_bidder_seat + 1) % _game_state.players.size()
-	_game_state.auction.high_bidder_seat = next_seat
-	VW.GameLibrary.save_active_game()
-	_refresh_all()
+	_commit_local_action(NetworkProtocol.ACTION_PLACE_BID, { increment = increment })
 
 func _on_auction_passed():
-	if not _game_state.auction.active:
-		return
-	var winner_seat = int(_game_state.auction.high_bidder_seat)
-	var plant_number = int(_game_state.auction.plant_number)
-	if winner_seat >= 0 and winner_seat < _game_state.players.size():
-		var player = _game_state.players[winner_seat]
-		player.elektro = max(0, int(player.elektro) - int(_game_state.auction.current_bid))
-		player.plants.append(plant_number)
-	_game_state.actual_market.erase(plant_number)
-	if not _game_state.futures_market.is_empty():
-		_game_state.actual_market.append(_game_state.futures_market.pop_front())
-		_game_state.actual_market.sort()
-	_game_state.auction.active = false
-	VW.GameLibrary.save_active_game()
-	_refresh_all()
+	_commit_local_action(NetworkProtocol.ACTION_PASS_AUCTION, {})
 
 func _on_resource_clicked(resource_type):
-	var bins = _game_state.resource_market.get(resource_type, [])
-	for bin_entry in bins:
-		if int(bin_entry.amount) > 0:
-			var seat = _active_seat()
-			var player = _game_state.players[seat]
-			var price = int(bin_entry.price)
-			if int(player.elektro) >= price:
-				player.elektro -= price
-				bin_entry.amount -= 1
-				player.stored_resources[resource_type] = int(player.stored_resources.get(resource_type, 0)) + 1
-				VW.GameLibrary.save_active_game()
-				_refresh_all()
-			return
+	_commit_local_action(NetworkProtocol.ACTION_BUY_RESOURCE, { resource = resource_type, amount = 1 })
 
 func _on_city_selected(city_id):
-	if int(_game_state.phase) != 4:
-		return
-	var seat = _active_seat()
-	var occupants = _game_state.city_occupancy.get(city_id, [])
-	if occupants.has(seat) or occupants.size() >= int(_game_state.step):
-		return
-	occupants.append(seat)
-	_game_state.city_occupancy[city_id] = occupants
-	_game_state.players[seat].built_cities.append(city_id)
-	VW.GameLibrary.save_active_game()
-	_refresh_all()
+	_commit_local_action(NetworkProtocol.ACTION_BUILD_CITY, { city_id = city_id })
 
 func _on_advance_phase():
-	_game_state.phase = int(_game_state.phase) + 1
-	if _game_state.phase > 5:
-		_game_state.phase = 1
-		_game_state.round_number = int(_game_state.round_number) + 1
-	VW.GameLibrary.save_active_game()
-	_refresh_all()
+	_commit_local_action(NetworkProtocol.ACTION_PASS_PHASE, {})
 
 func _on_simulate_end_game():
 	var standings = []

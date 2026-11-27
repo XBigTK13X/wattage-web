@@ -11,10 +11,11 @@ var INPUT_TEST = "dev/input_test"
 var MAIN_MENU = "game/main_menu"
 var MATCH_SETUP = "game/match_setup"
 var NETWORK_TEST = "dev/network_test"
+var RULES_TEST = "dev/rules_test"
 var SETTINGS_MENU = "game/settings_menu"
 var UI_TEST = "dev/ui_test"
 
-var FIRST_SCENE = CLIENT_PREVIEW
+var FIRST_SCENE = RULES_TEST
 
 func quit():
 	get_tree().quit()
