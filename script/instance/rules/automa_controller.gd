@@ -124,6 +124,7 @@ static func _frida_claim_plant_directly(state, seat_index, plant_number):
 	state.auction.bought_this_round.append(seat_index)
 	state.auction.any_plant_sold_this_round = true
 	state.auction["last_winner_seat"] = seat_index
+	GameEngine.record_history(state, seat_index, "Claimed Plant #" + str(plant_number))
 	GameEngine._advance_phase_two_turn(state)
 
 static func _act_frida(state, seat_index):
@@ -140,6 +141,7 @@ static func _act_frida(state, seat_index):
 		if phase_cards.is_empty() or market_size <= 3:
 			if not state.auction.round_passed_seats.has(seat_index):
 				state.auction.round_passed_seats.append(seat_index)
+			GameEngine.record_history(state, seat_index, "Passed Phase 2")
 			GameEngine._advance_phase_two_turn(state)
 			return true
 		var auction_card = phase_cards[0]
@@ -158,14 +160,17 @@ static func _act_frida(state, seat_index):
 			return true
 		if not state.auction.round_passed_seats.has(seat_index):
 			state.auction.round_passed_seats.append(seat_index)
+		GameEngine.record_history(state, seat_index, "Passed Phase 2")
 		GameEngine._advance_phase_two_turn(state)
 		return true
 
 	if phase == 3:
+		var removed_summary = []
 		if phase_cards.size() >= 2:
 			var resource_card = phase_cards[1]
 			var resource_mode = int(resource_card.get("resource1" if side == 0 else "resource2", 0))
 			if resource_mode > 0:
+				var removed_counts = {}
 				for plant_idx in range(player.plants.size()):
 					var plant = VW.Database.get_plant(state.deck_id, int(player.plants[plant_idx]))
 					if plant == null or plant.is_ecological:
@@ -186,6 +191,11 @@ static func _act_frida(state, seat_index):
 						for _unit in range(needed):
 							if ResourceMarket.buy_one(state.resource_market, chosen_fuel) < 0:
 								break
+							removed_counts[chosen_fuel] = int(removed_counts.get(chosen_fuel, 0)) + 1
+				for fuel_key in removed_counts.keys():
+					removed_summary.append(str(removed_counts[fuel_key]) + " " + fuel_key)
+		if not removed_summary.is_empty():
+			GameEngine.record_history(state, seat_index, "Removed " + ", ".join(removed_summary) + " from market")
 		GameEngine.apply_action(state, seat_index, NetworkProtocol.ACTION_PASS_PHASE, {})
 		return true
 
@@ -311,7 +321,15 @@ static func _act_robots(state, seat_index):
 		return true
 
 	if phase == 3:
+		var before_stored = player.stored_resources.duplicate(true)
 		RobotsExpansion.execute_phase_three(state, player)
+		var bought_parts = []
+		for fuel_key in ["coal", "oil", "garbage", "uranium"]:
+			var delta = int(player.stored_resources.get(fuel_key, 0)) - int(before_stored.get(fuel_key, 0))
+			if delta > 0:
+				bought_parts.append(str(delta) + " " + fuel_key)
+		if not bought_parts.is_empty():
+			GameEngine.record_history(state, seat_index, "Bought " + ", ".join(bought_parts))
 		GameEngine.apply_action(state, seat_index, NetworkProtocol.ACTION_PASS_PHASE, {})
 		return true
 

@@ -216,6 +216,29 @@ static func active_seat(state):
 		return int(order[position])
 	return -1
 
+static func record_history(state, seat_index, message):
+	var players = state.get("players", [])
+	var actor_name = players[seat_index].player_name if seat_index >= 0 and seat_index < players.size() else "System"
+	var entry = "[R" + str(int(state.get("round_number", 1))) + " P" + str(int(state.get("phase", 1))) + "] " + str(actor_name) + ": " + str(message)
+	var history = state.get("history", [])
+	history.append(entry)
+	if history.size() > 200:
+		history.pop_front()
+	state["history"] = history
+	var next_seq = int(state.get("action_seq", 0)) + 1
+	state["action_seq"] = next_seq
+	state["last_action_event"] = {
+		id = next_seq,
+		seat_index = seat_index,
+		player_name = str(actor_name),
+		message = str(message),
+		entry = entry,
+		phase = int(state.get("phase", 1))
+	}
+	if VW != null and VW.EventLog != null:
+		VW.EventLog.notify(entry)
+	return entry
+
 static func apply_action(state, seat_index, action_name, parameters = {}):
 	if bool(state.get("finished", false)):
 		return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Match is already finished" }
@@ -223,27 +246,31 @@ static func apply_action(state, seat_index, action_name, parameters = {}):
 		return { accepted = false, error_code = NetworkProtocol.ERROR_NOT_YOUR_TURN, message = "Not your turn" }
 
 	var phase = int(state.phase)
+	var result = { accepted = false, error_code = NetworkProtocol.ERROR_UNKNOWN_ACTION, message = "Unknown action" }
 	if action_name == NetworkProtocol.ACTION_SELECT_PLANT_FOR_AUCTION:
-		return _handle_select_plant(state, seat_index, parameters)
-	if action_name == NetworkProtocol.ACTION_PLACE_BID:
-		return _handle_place_bid(state, seat_index, parameters)
-	if action_name == NetworkProtocol.ACTION_PASS_AUCTION:
-		return _handle_pass_auction(state, seat_index)
-	if action_name == NetworkProtocol.ACTION_BUY_RESOURCE:
+		result = _handle_select_plant(state, seat_index, parameters)
+	elif action_name == NetworkProtocol.ACTION_PLACE_BID:
+		result = _handle_place_bid(state, seat_index, parameters)
+	elif action_name == NetworkProtocol.ACTION_PASS_AUCTION:
+		result = _handle_pass_auction(state, seat_index)
+	elif action_name == NetworkProtocol.ACTION_BUY_RESOURCE:
 		if phase != 3:
 			return { accepted = false, error_code = NetworkProtocol.ERROR_INVALID_PHASE, message = "Not in Phase 3" }
-		return _handle_buy_resource(state, seat_index, parameters)
-	if action_name == NetworkProtocol.ACTION_BUILD_CITY:
+		result = _handle_buy_resource(state, seat_index, parameters)
+	elif action_name == NetworkProtocol.ACTION_BUILD_CITY:
 		if phase != 4:
 			return { accepted = false, error_code = NetworkProtocol.ERROR_INVALID_PHASE, message = "Not in Phase 4" }
-		return _handle_build_city(state, seat_index, parameters)
-	if action_name == NetworkProtocol.ACTION_POWER_PLANTS:
+		result = _handle_build_city(state, seat_index, parameters)
+	elif action_name == NetworkProtocol.ACTION_POWER_PLANTS:
 		if phase != 5:
 			return { accepted = false, error_code = NetworkProtocol.ERROR_INVALID_PHASE, message = "Not in Phase 5" }
-		return _handle_power_plants(state, seat_index, parameters)
-	if action_name == NetworkProtocol.ACTION_PASS_PHASE:
-		return _handle_pass_phase(state, seat_index)
-	return { accepted = false, error_code = NetworkProtocol.ERROR_UNKNOWN_ACTION, message = "Unknown action" }
+		result = _handle_power_plants(state, seat_index, parameters)
+	elif action_name == NetworkProtocol.ACTION_PASS_PHASE:
+		result = _handle_pass_phase(state, seat_index)
+
+	if bool(result.get("accepted", false)):
+		record_history(state, seat_index, str(result.get("message", action_name)))
+	return result
 
 static func _frida_surcharge_for_human(state):
 	if not state.has("frida_state"):
@@ -377,6 +404,7 @@ static func _complete_auction(state):
 	state.auction["last_winner_seat"] = winner_seat
 	state.auction.bought_this_round.append(winner_seat)
 	state.auction.any_plant_sold_this_round = true
+	record_history(state, winner_seat, "Won Plant #" + str(plant_number) + " for " + str(cost) + "E")
 	_advance_phase_two_turn(state)
 
 static func _advance_phase_two_turn(state):

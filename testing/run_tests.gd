@@ -105,6 +105,7 @@ func _test_frida_automa():
 	_assert_true(frida_match.active_regions.size() == 3, "1P + 2 Frida uses 3P regions")
 	var left_ran = AutomaController.take_turn_if_automa(frida_match)
 	_assert_true(left_ran and frida_match.players[1].plants.size() == 1, "Frida Left claims Turn 1 plant before human")
+	_assert_true(not frida_match.get("history", []).is_empty(), "Frida Turn 1 claim records action history")
 	_assert_true(GameEngine.active_seat(frida_match) == 0, "Human acts after Frida Left in Turn 1")
 
 	var frida_player = frida_match.players[1]

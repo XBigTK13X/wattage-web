@@ -23,6 +23,11 @@ var _stage_label = null
 var _turn_label = null
 var _phase_action_button = null
 var _banner_label = null
+var _toast_panel = null
+var _toast_label = null
+var _toast_tween = null
+var _last_action_seq = 0
+var _automa_pending = false
 var _confirm_dialog = null
 var _pending_city_id = ""
 var _last_phase = -1
@@ -137,8 +142,27 @@ func _build_gui():
 
 	_banner_label = Label.new()
 	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_banner_label.clip_text = true
+	_banner_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_banner_label.add_theme_color_override("font_color", Color(0.96, 0.80, 0.28))
 	root_box.add_child(_banner_label)
+
+	_toast_panel = VW.Chrome.panel_container(Vector2(560, 56), Color(0.12, 0.16, 0.23, 0.96), Color(0.98, 0.82, 0.25, 1.0))
+	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_toast_panel.offset_left = 140
+	_toast_panel.offset_right = -140
+	_toast_panel.offset_top = -98
+	_toast_panel.offset_bottom = -42
+	_toast_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_toast_panel.visible = false
+	add_child(_toast_panel)
+
+	_toast_label = Label.new()
+	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_toast_label.add_theme_font_size_override("font_size", 16)
+	_toast_label.add_theme_color_override("font_color", Color(0.98, 0.88, 0.45))
+	_toast_panel.add_child(_toast_label)
 
 	_confirm_dialog = ConfirmationDialog.new()
 	_confirm_dialog.confirmed.connect(_on_city_build_confirmed)
@@ -147,14 +171,9 @@ func _build_gui():
 	_select_tab_for_phase(int(_game_state.get("phase", 2)))
 
 func _refresh_all():
-	var guard_steps = 0
-	while not bool(_game_state.get("finished", false)) and guard_steps < 12 and AutomaController.take_turn_if_automa(_game_state):
-		guard_steps += 1
 	var current_phase = int(_game_state.get("phase", 1))
 	if current_phase != _last_phase:
 		_last_phase = current_phase
-		if _banner_label != null:
-			_banner_label.text = "Entered Phase " + str(current_phase) + " (Round " + str(_game_state.get("round_number", 1)) + ")"
 		VW.Audio.play_sound_effect("phase_change")
 		_select_tab_for_phase(current_phase)
 	_map_view.set_state(_map_definition, _game_state)
@@ -162,8 +181,67 @@ func _refresh_all():
 	_resource_market_panel.set_state(_game_state)
 	_player_strip.set_state(_game_state)
 	_update_turn_banner_and_controls()
+	_update_action_feed_and_toast()
 	if bool(_game_state.get("finished", false)):
 		PlayerSummaryStrip.show_end_game_modal(self, _game_state)
+		return
+	_schedule_next_automa_step_if_needed()
+
+func _schedule_next_automa_step_if_needed():
+	if _automa_pending or bool(_game_state.get("finished", false)):
+		return
+	var seat = _active_seat()
+	var players = _game_state.get("players", [])
+	if seat < 0 or seat >= players.size():
+		return
+	var mode = str(players[seat].get("control_mode", "local"))
+	if mode != "automa_frida" and mode != "automa_robots":
+		return
+	_automa_pending = true
+	var timer = get_tree().create_timer(0.55)
+	timer.timeout.connect(_on_automa_step_timeout)
+
+func _on_automa_step_timeout():
+	_automa_pending = false
+	if not is_inside_tree() or _game_state == null or bool(_game_state.get("finished", false)):
+		return
+	if AutomaController.take_turn_if_automa(_game_state):
+		VW.GameLibrary.save_active_game()
+		VW.Network.broadcast_state()
+		_refresh_all()
+
+func _update_action_feed_and_toast():
+	var history = _game_state.get("history", [])
+	if not history.is_empty() and _banner_label != null:
+		var recent = history.slice(-2)
+		_banner_label.text = "  |  ".join(recent)
+	var seq = int(_game_state.get("action_seq", 0))
+	if seq > _last_action_seq:
+		_last_action_seq = seq
+		var event_data = _game_state.get("last_action_event", {})
+		var text = str(event_data.get("entry", ""))
+		if text != "":
+			_play_action_toast(text)
+
+func _play_action_toast(message):
+	if _toast_panel == null or _toast_label == null:
+		return
+	_toast_label.text = message
+	_toast_panel.visible = true
+	_toast_panel.modulate = Color(1, 1, 1, 0.0)
+	_toast_panel.scale = Vector2(0.96, 0.96)
+	if _toast_tween != null and _toast_tween.is_valid():
+		_toast_tween.kill()
+	_toast_tween = create_tween()
+	_toast_tween.set_parallel(true)
+	_toast_tween.tween_property(_toast_panel, "modulate:a", 1.0, 0.16)
+	_toast_tween.tween_property(_toast_panel, "scale", Vector2(1.0, 1.0), 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_toast_tween.chain().tween_interval(1.4)
+	_toast_tween.chain().tween_property(_toast_panel, "modulate:a", 0.0, 0.35)
+	_toast_tween.chain().tween_callback(func():
+		if is_instance_valid(_toast_panel):
+			_toast_panel.visible = false
+	)
 
 func _select_tab_for_phase(phase):
 	if _tab_container == null:
@@ -253,11 +331,6 @@ func _commit_local_action(action_name, parameters = {}):
 		return { accepted = false, message = "Waiting for non-local player" }
 	var result = GameEngine.apply_action(_game_state, seat, action_name, parameters)
 	if result.accepted:
-		var history = _game_state.get("history", [])
-		var entry = "Seat " + str(seat + 1) + ": " + str(result.get("message", action_name))
-		history.append(entry)
-		_game_state["history"] = history
-		VW.EventLog.notify(entry)
 		VW.GameLibrary.save_active_game()
 		VW.Network.broadcast_state()
 		_refresh_all()
