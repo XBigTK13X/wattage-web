@@ -1,43 +1,65 @@
 extends PanelContainer
 
-var _players_row = null
+const GameEngine = preload("res://script/instance/rules/game_engine.gd")
+
+var _players_list = null
 
 func _ready():
 	var style_box = StyleBoxFlat.new()
 	style_box.bg_color = Color(0.09, 0.11, 0.15, 0.96)
 	style_box.border_color = Color(0.42, 0.50, 0.62, 0.9)
 	style_box.set_border_width_all(2)
-	style_box.set_content_margin_all(10)
+	style_box.set_content_margin_all(14)
 	add_theme_stylebox_override("panel", style_box)
 
-	_players_row = HBoxContainer.new()
-	_players_row.add_theme_constant_override("separation", 12)
-	add_child(_players_row)
+	var scroll = ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroll)
+
+	_players_list = VBoxContainer.new()
+	_players_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_players_list.add_theme_constant_override("separation", 12)
+	scroll.add_child(_players_list)
 
 func set_state(game_state):
-	for child in _players_row.get_children():
+	for child in _players_list.get_children():
 		child.queue_free()
 
 	var players = game_state.get("players", [])
 	var turn_order = game_state.get("turn_order", [])
-	var active_turn_pos = int(game_state.get("active_turn_position", 0))
-	var active_seat = turn_order[active_turn_pos] if active_turn_pos >= 0 and active_turn_pos < turn_order.size() else -1
+	var active_seat = GameEngine.active_seat(game_state)
+	var deck_id = str(game_state.get("deck_id", "base_game"))
 
-	for player in players:
-		var is_active = int(player.seat_index) == active_seat
+	for order_pos in range(turn_order.size()):
+		var seat_idx = int(turn_order[order_pos])
+		if seat_idx < 0 or seat_idx >= players.size():
+			continue
+		var player = players[seat_idx]
+		var is_active = seat_idx == active_seat
 		var border_color = Color(0.98, 0.82, 0.25) if is_active else VW.Assets.get_player_color(player.color)
-		var card = VW.Chrome.panel_container(Vector2(210, 86), Color(0.14, 0.17, 0.22, 0.96), border_color)
+		var card = VW.Chrome.panel_container(Vector2(0, 128), Color(0.14, 0.17, 0.22, 0.96), border_color)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_players_row.add_child(card)
+		_players_list.add_child(card)
 
 		var row = HBoxContainer.new()
-		row.add_theme_constant_override("separation", 8)
+		row.add_theme_constant_override("separation", 16)
 		card.add_child(row)
+
+		var left_box = VBoxContainer.new()
+		left_box.custom_minimum_size = Vector2(300, 0)
+		left_box.add_theme_constant_override("separation", 6)
+		row.add_child(left_box)
+
+		var name_row = HBoxContainer.new()
+		name_row.add_theme_constant_override("separation", 8)
+		left_box.add_child(name_row)
 
 		var house = TextureRect.new()
 		house.texture = VW.Assets.get_house_texture(player.color)
 		house.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
-		row.add_child(house)
+		name_row.add_child(house)
 
 		if is_active:
 			var turn_marker = VW.Assets.get_token_texture("turn_order_marker")
@@ -47,11 +69,34 @@ func set_state(game_state):
 				marker_rect.custom_minimum_size = Vector2(20, 20)
 				marker_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				marker_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				row.add_child(marker_rect)
+				name_row.add_child(marker_rect)
 
-		var info = Label.new()
-		info.text = str(player.player_name) + ("\n*" if is_active else "\n") + str(player.elektro) + "E | Cities: " + str(player.built_cities.size()) + " | Plants: " + str(player.plants.size())
-		row.add_child(info)
+		var name_label = Label.new()
+		name_label.text = "#" + str(order_pos + 1) + " " + str(player.player_name) + " (" + str(player.control_mode) + ")"
+		name_label.add_theme_font_size_override("font_size", 17)
+		name_row.add_child(name_label)
+
+		var stats_label = Label.new()
+		var stored = player.get("stored_resources", {})
+		var city_total = GameEngine.player_city_count(player)
+		stats_label.text = "Elektro: " + str(player.elektro) + "E | Cities: " + str(city_total) + "\nFuel: Coal " + str(int(stored.get("coal", 0))) + ", Oil " + str(int(stored.get("oil", 0))) + ", Garbage " + str(int(stored.get("garbage", 0))) + ", Uranium " + str(int(stored.get("uranium", 0)))
+		left_box.add_child(stats_label)
+
+		var plants_row = HBoxContainer.new()
+		plants_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		plants_row.add_theme_constant_override("separation", 10)
+		row.add_child(plants_row)
+
+		if player.plants.is_empty():
+			var no_plants = Label.new()
+			no_plants.text = "No power plants"
+			no_plants.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			plants_row.add_child(no_plants)
+		else:
+			for plant_number in player.plants:
+				var plant_def = VW.Database.get_plant(deck_id, int(plant_number))
+				if plant_def != null:
+					plants_row.add_child(VW.Assets.build_plant_card(plant_def, deck_id, Vector2(96, 126)))
 
 static func show_end_game_modal(parent_node, game_state):
 	var overlay = ColorRect.new()

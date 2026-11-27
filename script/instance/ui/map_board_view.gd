@@ -1,5 +1,8 @@
 extends Control
 
+const GameEngine = preload("res://script/instance/rules/game_engine.gd")
+const MapGraph = preload("res://script/instance/rules/map_graph.gd")
+
 signal city_selected(city_id)
 
 var _map_definition = null
@@ -89,6 +92,9 @@ func _rebuild_nodes():
 	var players = _game_state.get("players", [])
 	var current_phase = int(_game_state.get("phase", 1))
 	var step = int(_game_state.get("step", 1))
+	var active_seat_index = GameEngine.active_seat(_game_state)
+	var active_player = players[active_seat_index] if active_seat_index >= 0 and active_seat_index < players.size() else null
+	var is_local_build = current_phase == 4 and active_player != null and str(active_player.get("control_mode", "local")) == "local"
 
 	var show_inactive = VW.Settings != null and VW.Settings.show_inactive_regions()
 	for city_id in _map_definition.cities.keys():
@@ -102,7 +108,8 @@ func _rebuild_nodes():
 			region_color = Color(0.25, 0.27, 0.30, 0.5)
 
 		var occupants = occupancy.get(city_id, [])
-		var is_buildable = region_active and current_phase == 4 and occupants.size() < step
+		var build_cost = MapGraph.city_build_cost(_map_definition, _game_state, active_seat_index, city_id) if is_local_build else -1
+		var is_buildable = is_local_build and build_cost >= 0 and int(active_player.get("elektro", 0)) >= build_cost
 		var border_color = Color(0.35, 0.92, 0.45) if is_buildable else region_color
 
 		var button = VW.Chrome.styled_button(city.name, 13)
@@ -110,7 +117,9 @@ func _rebuild_nodes():
 		button.position = city.position - Vector2(59, 24)
 		button.modulate = Color(1, 1, 1, 1.0 if region_active else 0.45)
 		button.add_theme_color_override("font_color", border_color.lightened(0.35))
-		button.pressed.connect(func(): city_selected.emit(city_id))
+		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if is_buildable else Control.CURSOR_ARROW
+		if is_buildable:
+			button.pressed.connect(func(): city_selected.emit(city_id))
 		button.mouse_entered.connect(_on_city_focused.bind(city_id))
 		button.focus_entered.connect(_on_city_focused.bind(city_id))
 		_canvas.add_child(button)

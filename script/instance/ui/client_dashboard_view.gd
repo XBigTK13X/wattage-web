@@ -117,7 +117,7 @@ func update_state(public_state, private_state):
 
 	_rebuild_phase_actions(public_state, private_state, is_my_turn)
 
-func _rebuild_phase_actions(public_state, _private_state, is_my_turn):
+func _rebuild_phase_actions(public_state, private_state, is_my_turn):
 	for child in _phase_actions_box.get_children():
 		child.queue_free()
 	_phase_hint_label.visible = false
@@ -129,14 +129,19 @@ func _rebuild_phase_actions(public_state, _private_state, is_my_turn):
 		return
 
 	var phase = int(public_state.get("phase", 1))
+	var round_number = int(public_state.get("round_number", 1))
+	var elektro = int(private_state.get("elektro", 0))
 	var auction = public_state.get("auction", {})
+	var auction_active = bool(auction.get("active", false))
 
 	if phase == 2:
-		if bool(auction.get("active", false)):
+		if auction_active:
+			var current_bid = int(auction.get("current_bid", 0))
 			var bid_one = VW.Chrome.styled_button("Bid +1", 16)
 			bid_one.custom_minimum_size = Vector2(130, 50)
 			bid_one.icon = VW.Assets.get_icon_texture("action_bid_plus1")
 			bid_one.expand_icon = true
+			bid_one.disabled = elektro < current_bid + 1
 			bid_one.pressed.connect(func(): action_requested.emit("place_bid", { increment = 1 }))
 			_phase_actions_box.add_child(bid_one)
 
@@ -144,6 +149,7 @@ func _rebuild_phase_actions(public_state, _private_state, is_my_turn):
 			bid_five.custom_minimum_size = Vector2(130, 50)
 			bid_five.icon = VW.Assets.get_icon_texture("action_bid_plus5")
 			bid_five.expand_icon = true
+			bid_five.disabled = elektro < current_bid + 5
 			bid_five.pressed.connect(func(): action_requested.emit("place_bid", { increment = 5 }))
 			_phase_actions_box.add_child(bid_five)
 
@@ -153,32 +159,56 @@ func _rebuild_phase_actions(public_state, _private_state, is_my_turn):
 			pass_bid.expand_icon = true
 			pass_bid.pressed.connect(func(): action_requested.emit("pass_auction", {}))
 			_phase_actions_box.add_child(pass_bid)
+			return
 		else:
+			if round_number == 1:
+				_phase_hint_label.text = "Round 1: Nominate a power plant (mandatory buy)."
+				_phase_hint_label.visible = true
 			for plant_number in public_state.get("actual_market", []):
-				var nominate_button = VW.Chrome.styled_button("Nominate #" + str(plant_number), 15)
+				var num = int(plant_number)
+				var nominate_button = VW.Chrome.styled_button("Nominate #" + str(num), 15)
 				nominate_button.custom_minimum_size = Vector2(148, 50)
-				nominate_button.pressed.connect(func(): action_requested.emit("select_plant_for_auction", { plant_number = int(plant_number) }))
+				nominate_button.disabled = elektro < num
+				nominate_button.pressed.connect(func(): action_requested.emit("select_plant_for_auction", { plant_number = num }))
 				_phase_actions_box.add_child(nominate_button)
+			if round_number > 1:
+				var pass_phase_button = VW.Chrome.styled_button("Pass Phase 2", 15)
+				pass_phase_button.custom_minimum_size = Vector2(148, 50)
+				pass_phase_button.pressed.connect(func(): action_requested.emit("pass_phase", {}))
+				_phase_actions_box.add_child(pass_phase_button)
+			return
 	elif phase == 3:
+		var market = public_state.get("resource_market", {})
 		for resource_type in ["coal", "oil", "garbage", "uranium"]:
+			var next_price = -1
+			for bin_entry in market.get(resource_type, []):
+				if int(bin_entry.get("amount", 0)) > 0:
+					next_price = int(bin_entry.get("price", 0))
+					break
 			var buy_button = VW.Chrome.styled_button("Buy " + resource_type.capitalize(), 15)
 			buy_button.custom_minimum_size = Vector2(154, 50)
 			buy_button.icon = VW.Assets.get_resource_texture(resource_type)
 			buy_button.expand_icon = true
+			buy_button.disabled = next_price < 0 or elektro < next_price
 			buy_button.pressed.connect(func(): action_requested.emit("buy_resource", { resource = resource_type, amount = 1 }))
 			_phase_actions_box.add_child(buy_button)
+		var done_resources = VW.Chrome.styled_button("Done Buying", 15)
+		done_resources.custom_minimum_size = Vector2(136, 50)
+		done_resources.pressed.connect(func(): action_requested.emit("pass_phase", {}))
+		_phase_actions_box.add_child(done_resources)
+		return
 	elif phase == 4:
 		_phase_hint_label.text = "Switch to 'Map Inspection' view and tap a city to build."
 		_phase_hint_label.visible = true
+		var done_build = VW.Chrome.styled_button("Done Building", 15)
+		done_build.custom_minimum_size = Vector2(148, 50)
+		done_build.pressed.connect(func(): action_requested.emit("pass_phase", {}))
+		_phase_actions_box.add_child(done_build)
+		return
 	elif phase == 5:
-		var power_button = VW.Chrome.styled_button("Power All Cities", 16)
-		power_button.custom_minimum_size = Vector2(196, 50)
+		var power_button = VW.Chrome.styled_button("Power Plants & Collect", 16)
+		power_button.custom_minimum_size = Vector2(210, 50)
 		power_button.icon = VW.Assets.get_icon_texture("power_bolt")
 		power_button.expand_icon = true
 		power_button.pressed.connect(func(): action_requested.emit("power_plants", {}))
 		_phase_actions_box.add_child(power_button)
-
-	var pass_phase_button = VW.Chrome.styled_button("End Phase", 15)
-	pass_phase_button.custom_minimum_size = Vector2(136, 50)
-	pass_phase_button.pressed.connect(func(): action_requested.emit("pass_phase", {}))
-	_phase_actions_box.add_child(pass_phase_button)
