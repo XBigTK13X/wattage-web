@@ -80,12 +80,12 @@ func _load_decks_directory():
 			by_number = by_number
 		}
 
-func list_maps(include_dev = false):
+func list_maps(include_dev = false, include_disabled = false):
 	ensure_loaded()
 	var keys = []
 	for map_id in _maps.keys():
 		var map_definition = _maps[map_id]
-		if include_dev or not map_definition.is_dev:
+		if (include_dev or not map_definition.is_dev) and (include_disabled or map_definition.enabled):
 			keys.append(map_id)
 	keys.sort()
 	return keys

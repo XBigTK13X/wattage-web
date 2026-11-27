@@ -13,6 +13,7 @@ const OPPOSITE_DIRECTIONS = {
 
 var id = ""
 var display_name = ""
+var enabled = true
 var is_dev = false
 var start_resources = []
 var player_count_info = {}
@@ -28,6 +29,7 @@ static func from_dictionary(payload):
 	var definition = new()
 	definition.id = str(payload.get("id", ""))
 	definition.display_name = str(payload.get("display_name", definition.id))
+	definition.enabled = bool(payload.get("enabled", true))
 	definition.is_dev = bool(payload.get("is_dev", false))
 	definition.start_resources = payload.get("start_resources", [1, 3, 7, 14]).duplicate()
 	definition.player_count_info = payload.get("player_count_info", {}).duplicate(true)
