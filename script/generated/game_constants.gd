@@ -54,7 +54,7 @@ const MAP_RENDER_SIZES = {
 	"china": Vector2i(1200, 820),
 	"europe": Vector2i(1200, 820),
 	"france": Vector2i(1200, 820),
-	"germany": Vector2i(1279, 1634),
+	"germany": Vector2i(1700, 2100),
 	"india": Vector2i(1200, 820),
 	"italy": Vector2i(1200, 820),
 	"japan": Vector2i(1200, 820),
@@ -68,7 +68,7 @@ const MAP_RENDER_SIZES = {
 	"south_africa": Vector2i(1200, 820),
 	"spain_portugal": Vector2i(1200, 820),
 	"uk_ireland": Vector2i(1200, 820),
-	"united_states": Vector2i(1648, 1361)
+	"united_states": Vector2i(2200, 1450)
 }
 
 const DECK_IDS = ["base_game", "new_plants_1", "new_plants_2"]

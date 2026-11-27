@@ -80,25 +80,25 @@ def make_plant_card_svg(card_data, theme, tokens_data):
     cities_powered = int(card_data.get("cities_powered", 0))
     accepted_fuels = card_data.get("accepted_fuels", [])
 
-    doc.rect(12, 12, 54, 40, rx=8, ry=8, fill=res_info["fill"], stroke=border_color, stroke_width=2.0)
-    doc.text(39, 40, str(number), fill="#ffffff", font_family=font_family, font_size="24", font_weight="bold", text_anchor="middle")
+    doc.rect(12, 12, 62, 44, rx=8, ry=8, fill=res_info["fill"], stroke=border_color, stroke_width=2.2)
+    doc.text(43, 44, str(number), fill="#ffffff", font_family=font_family, font_size="28", font_weight="bold", text_anchor="middle")
 
-    doc.rect(12, 62, width - 24, 78, rx=8, ry=8, fill="#121722", stroke="#2e384c", stroke_width=1.5)
+    doc.rect(12, 64, width - 24, 78, rx=8, ry=8, fill="#121722", stroke="#2e384c", stroke_width=1.5)
     if bool(card_data.get("is_ecological", False)):
         draw_fuel_glyph(doc, "ecological", width / 2, 95, tokens_data)
-        doc.text(width / 2, 128, "CLEAN ENERGY", fill="#aaf5c8", font_family=font_family, font_size="11", font_weight="bold", text_anchor="middle")
+        doc.text(width / 2, 130, "CLEAN", fill="#aaf5c8", font_family=font_family, font_size="14", font_weight="bold", text_anchor="middle")
     else:
         count = max(1, len(accepted_fuels))
-        spacing = 30
+        spacing = 32
         start_x = (width / 2) - ((count - 1) * spacing) / 2.0
         for idx, sub_fuel in enumerate(accepted_fuels):
             draw_fuel_glyph(doc, sub_fuel, start_x + idx * spacing, 92, tokens_data)
         fuel_label = f"{fuel_cost}x " + "/".join(accepted_fuels).upper()
-        doc.text(width / 2, 128, fuel_label, fill=palette["text_secondary"], font_family=font_family, font_size="11", font_weight="bold", text_anchor="middle")
+        doc.text(width / 2, 131, fuel_label, fill=palette["text_primary"], font_family=font_family, font_size="13", font_weight="bold", text_anchor="middle")
 
     doc.rect(12, height - 56, width - 24, 42, rx=8, ry=8, fill="#1b2333", stroke=palette["border_brass"], stroke_width=1.8)
-    doc.polygon([(36, height - 46), (26, height - 34), (33, height - 34), (30, height - 22), (42, height - 37), (35, height - 37)], fill=palette["text_accent"])
-    doc.text(width / 2 + 12, height - 27, f"{cities_powered} CITIES" if cities_powered != 1 else "1 CITY", fill=palette["text_primary"], font_family=font_family, font_size="16", font_weight="bold", text_anchor="middle")
+    doc.polygon([(34, height - 46), (24, height - 34), (31, height - 34), (28, height - 22), (40, height - 37), (33, height - 37)], fill=palette["text_accent"])
+    doc.text(width / 2 + 12, height - 27, f"{cities_powered} CITIES" if cities_powered != 1 else "1 CITY", fill=palette["text_primary"], font_family=font_family, font_size="18", font_weight="bold", text_anchor="middle")
     return doc
 
 

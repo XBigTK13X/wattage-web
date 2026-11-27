@@ -26,5 +26,7 @@
 ## Retail Game Inspection (`airef/`)
 - `airef/physical/map` contains photos of the real board game maps
 - `airef/physical/component` contains various photos of game components
+- `airef/game-rules/md` contains markdown rulebooks for the base game, expansion maps, and automa variants (`automa-frida.md`, `automa-robots.md`, `ruleset-base-game-v1.md`, etc.)
+- `airef/game-rules/pdf` contains the corresponding original PDF rulebooks
 - `airef/automa` contains a mostly correct implementation of many rules of the game in python for the base game maps.
 - `airef/dredmor` contains a reference godot game implementation to borrow code from and serve as an architecture example

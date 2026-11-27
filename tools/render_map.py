@@ -87,27 +87,51 @@ def render_map_base_svg(map_data, theme):
         pts = cities_by_region.get(region_id, [])
         if not pts:
             continue
-        hull = expand_polygon(convex_hull(pts), 52.0)
+        custom_poly = region_info.get("polygon", [])
+        if len(custom_poly) >= 3:
+            hull = [(round(float(pt[0]) * width, 1), round(float(pt[1]) * height, 1)) for pt in custom_poly]
+        else:
+            hull = expand_polygon(convex_hull(pts), 52.0)
         if len(hull) >= 3:
             doc.polygon(
                 hull,
                 fill=region_color,
-                fill_opacity="0.18",
-                stroke=region_color,
-                stroke_width=2.6,
-                stroke_opacity="0.72",
+                fill_opacity="0.22",
+                stroke=palette["map_ocean"],
+                stroke_width=8.0,
                 stroke_linejoin="round",
             )
-        cx = sum(pt[0] for pt in pts) / len(pts)
-        cy = sum(pt[1] for pt in pts) / len(pts)
+            doc.polygon(
+                hull,
+                fill="none",
+                stroke=region_color,
+                stroke_width=2.8,
+                stroke_opacity="0.88",
+                stroke_linejoin="round",
+            )
+
+        label_pos = region_info.get("label_pos", [])
+        if len(label_pos) == 2:
+            lx = round(float(label_pos[0]) * width, 1)
+            ly = round(float(label_pos[1]) * height, 1)
+        else:
+            cx = sum(pt[0] for pt in pts) / len(pts)
+            cy = sum(pt[1] for pt in pts) / len(pts)
+            dx = cx - (width * 0.5)
+            dy = cy - (height * 0.5)
+            dist = max(1.0, math.hypot(dx, dy))
+            lx = round(max(80.0, min(width - 80.0, cx + (dx / dist) * 140.0)), 1)
+            ly = round(max(40.0, min(height - 40.0, cy + (dy / dist) * 140.0)), 1)
+
+        label_text = region_info.get("name", region_id).upper()
+        doc.rect(lx - 64, ly - 17, 128, 34, rx=10, ry=10, fill=palette["bg_panel"], fill_opacity="0.92", stroke=region_color, stroke_width=2.2)
         doc.text(
-            round(cx, 1),
-            round(cy, 1),
-            region_info.get("name", region_id).upper(),
+            lx,
+            ly + 6,
+            label_text,
             fill=region_color,
-            fill_opacity="0.45",
             font_family=font_family,
-            font_size="22",
+            font_size="16",
             font_weight="bold",
             text_anchor="middle",
         )

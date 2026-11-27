@@ -147,27 +147,283 @@
   "regions": {
     "region_1": {
       "name": "Region 1",
-      "color": "#3a7ca5"
+      "color": "#3a7ca5",
+      "polygon": [
+        [
+          0.05,
+          0.09
+        ],
+        [
+          0.39,
+          0.11
+        ],
+        [
+          0.42,
+          0.29
+        ],
+        [
+          0.53,
+          0.33
+        ],
+        [
+          0.54,
+          0.42
+        ],
+        [
+          0.41,
+          0.54
+        ],
+        [
+          0.3,
+          0.54
+        ],
+        [
+          0.28,
+          0.36
+        ],
+        [
+          0.16,
+          0.36
+        ],
+        [
+          0.04,
+          0.35
+        ]
+      ],
+      "label_pos": [
+        0.18,
+        0.06
+      ]
     },
     "region_2": {
       "name": "Region 2",
-      "color": "#8f5d9c"
+      "color": "#8f5d9c",
+      "polygon": [
+        [
+          0.04,
+          0.35
+        ],
+        [
+          0.16,
+          0.36
+        ],
+        [
+          0.28,
+          0.36
+        ],
+        [
+          0.3,
+          0.54
+        ],
+        [
+          0.41,
+          0.54
+        ],
+        [
+          0.41,
+          0.72
+        ],
+        [
+          0.29,
+          0.79
+        ],
+        [
+          0.14,
+          0.84
+        ],
+        [
+          0.06,
+          0.69
+        ],
+        [
+          0.04,
+          0.48
+        ]
+      ],
+      "label_pos": [
+        0.06,
+        0.84
+      ]
     },
     "region_3": {
       "name": "Region 3",
-      "color": "#d97724"
+      "color": "#d97724",
+      "polygon": [
+        [
+          0.39,
+          0.11
+        ],
+        [
+          0.62,
+          0.08
+        ],
+        [
+          0.67,
+          0.27
+        ],
+        [
+          0.67,
+          0.38
+        ],
+        [
+          0.75,
+          0.46
+        ],
+        [
+          0.75,
+          0.58
+        ],
+        [
+          0.68,
+          0.64
+        ],
+        [
+          0.56,
+          0.55
+        ],
+        [
+          0.54,
+          0.42
+        ],
+        [
+          0.53,
+          0.33
+        ],
+        [
+          0.42,
+          0.29
+        ]
+      ],
+      "label_pos": [
+        0.55,
+        0.05
+      ]
     },
     "region_4": {
       "name": "Region 4",
-      "color": "#c94c4c"
+      "color": "#c94c4c",
+      "polygon": [
+        [
+          0.41,
+          0.54
+        ],
+        [
+          0.54,
+          0.42
+        ],
+        [
+          0.56,
+          0.55
+        ],
+        [
+          0.68,
+          0.64
+        ],
+        [
+          0.69,
+          0.75
+        ],
+        [
+          0.65,
+          0.9
+        ],
+        [
+          0.46,
+          0.9
+        ],
+        [
+          0.41,
+          0.72
+        ]
+      ],
+      "label_pos": [
+        0.44,
+        0.94
+      ]
     },
     "region_5": {
       "name": "Region 5",
-      "color": "#4a8f5c"
+      "color": "#4a8f5c",
+      "polygon": [
+        [
+          0.68,
+          0.64
+        ],
+        [
+          0.75,
+          0.58
+        ],
+        [
+          0.75,
+          0.46
+        ],
+        [
+          0.92,
+          0.48
+        ],
+        [
+          0.87,
+          0.72
+        ],
+        [
+          0.87,
+          0.97
+        ],
+        [
+          0.74,
+          0.96
+        ],
+        [
+          0.73,
+          0.81
+        ],
+        [
+          0.69,
+          0.75
+        ]
+      ],
+      "label_pos": [
+        0.91,
+        0.82
+      ]
     },
     "region_6": {
       "name": "Region 6",
-      "color": "#c7a328"
+      "color": "#c7a328",
+      "polygon": [
+        [
+          0.67,
+          0.27
+        ],
+        [
+          0.81,
+          0.19
+        ],
+        [
+          0.97,
+          0.14
+        ],
+        [
+          0.95,
+          0.34
+        ],
+        [
+          0.92,
+          0.48
+        ],
+        [
+          0.75,
+          0.46
+        ],
+        [
+          0.67,
+          0.38
+        ]
+      ],
+      "label_pos": [
+        0.85,
+        0.09
+      ]
     }
   },
   "region_connections": [
@@ -210,8 +466,8 @@
       "name": "Seattle",
       "region_id": "region_1",
       "position": [
-        223.9,
-        254.6
+        242.0,
+        203.0
       ],
       "max_connections": 3
     },
@@ -220,8 +476,8 @@
       "name": "Portland",
       "region_id": "region_1",
       "position": [
-        120.0,
-        381.8
+        198.0,
+        391.5
       ],
       "max_connections": 3
     },
@@ -230,8 +486,8 @@
       "name": "Boise",
       "region_id": "region_1",
       "position": [
-        302.3,
-        393.9
+        440.0,
+        420.5
       ],
       "max_connections": 6
     },
@@ -240,8 +496,8 @@
       "name": "Billings",
       "region_id": "region_1",
       "position": [
-        437.6,
-        254.4
+        660.0,
+        275.5
       ],
       "max_connections": 5
     },
@@ -250,8 +506,8 @@
       "name": "Cheyenne",
       "region_id": "region_1",
       "position": [
-        512.0,
-        374.1
+        792.0,
+        493.0
       ],
       "max_connections": 5
     },
@@ -260,8 +516,8 @@
       "name": "Denver",
       "region_id": "region_1",
       "position": [
-        525.6,
-        539.3
+        792.0,
+        696.0
       ],
       "max_connections": 4
     },
@@ -270,8 +526,8 @@
       "name": "Omaha",
       "region_id": "region_1",
       "position": [
-        622.6,
-        374.0
+        1034.0,
+        522.0
       ],
       "max_connections": 4
     },
@@ -280,8 +536,8 @@
       "name": "San Francisco",
       "region_id": "region_2",
       "position": [
-        154.1,
-        554.5
+        198.0,
+        710.5
       ],
       "max_connections": 5
     },
@@ -290,8 +546,8 @@
       "name": "Los Angeles",
       "region_id": "region_2",
       "position": [
-        137.0,
-        762.8
+        242.0,
+        971.5
       ],
       "max_connections": 3
     },
@@ -300,8 +556,8 @@
       "name": "San Diego",
       "region_id": "region_2",
       "position": [
-        251.2,
-        867.6
+        352.0,
+        1131.0
       ],
       "max_connections": 3
     },
@@ -310,8 +566,8 @@
       "name": "Phoenix",
       "region_id": "region_2",
       "position": [
-        404.5,
-        838.3
+        572.0,
+        1044.0
       ],
       "max_connections": 3
     },
@@ -320,8 +576,8 @@
       "name": "Las Vegas",
       "region_id": "region_2",
       "position": [
-        276.0,
-        683.8
+        396.0,
+        855.5
       ],
       "max_connections": 6
     },
@@ -330,8 +586,8 @@
       "name": "Salt Lake City",
       "region_id": "region_2",
       "position": [
-        377.4,
-        549.6
+        506.0,
+        638.0
       ],
       "max_connections": 5
     },
@@ -340,8 +596,8 @@
       "name": "Santa Fe",
       "region_id": "region_2",
       "position": [
-        517.9,
-        700.3
+        770.0,
+        899.0
       ],
       "max_connections": 8
     },
@@ -350,8 +606,8 @@
       "name": "Fargo",
       "region_id": "region_3",
       "position": [
-        599.7,
-        149.5
+        990.0,
+        217.5
       ],
       "max_connections": 3
     },
@@ -360,8 +616,8 @@
       "name": "Duluth",
       "region_id": "region_3",
       "position": [
-        808.0,
-        100.0
+        1210.0,
+        188.5
       ],
       "max_connections": 4
     },
@@ -370,8 +626,8 @@
       "name": "Minneapolis",
       "region_id": "region_3",
       "position": [
-        686.1,
-        244.0
+        1144.0,
+        362.5
       ],
       "max_connections": 6
     },
@@ -380,8 +636,8 @@
       "name": "Chicago",
       "region_id": "region_3",
       "position": [
-        833.0,
-        349.7
+        1364.0,
+        493.0
       ],
       "max_connections": 7
     },
@@ -390,8 +646,8 @@
       "name": "St. Louis",
       "region_id": "region_3",
       "position": [
-        844.5,
-        524.6
+        1298.0,
+        681.5
       ],
       "max_connections": 5
     },
@@ -400,8 +656,8 @@
       "name": "Knoxville",
       "region_id": "region_3",
       "position": [
-        1005.2,
-        581.3
+        1518.0,
+        783.0
       ],
       "max_connections": 2
     },
@@ -410,8 +666,8 @@
       "name": "Cincinnati",
       "region_id": "region_3",
       "position": [
-        1004.2,
-        458.7
+        1496.0,
+        667.0
       ],
       "max_connections": 6
     },
@@ -420,8 +676,8 @@
       "name": "Kansas City",
       "region_id": "region_4",
       "position": [
-        701.3,
-        534.6
+        1056.0,
+        754.0
       ],
       "max_connections": 7
     },
@@ -430,8 +686,8 @@
       "name": "Oklahoma City",
       "region_id": "region_4",
       "position": [
-        637.0,
-        678.2
+        1034.0,
+        884.5
       ],
       "max_connections": 4
     },
@@ -440,8 +696,8 @@
       "name": "Dallas",
       "region_id": "region_4",
       "position": [
-        644.7,
-        822.0
+        1056.0,
+        1058.5
       ],
       "max_connections": 5
     },
@@ -450,8 +706,8 @@
       "name": "Houston",
       "region_id": "region_4",
       "position": [
-        591.9,
-        946.8
+        1100.0,
+        1247.0
       ],
       "max_connections": 3
     },
@@ -460,8 +716,8 @@
       "name": "New Orleans",
       "region_id": "region_4",
       "position": [
-        796.3,
-        943.5
+        1342.0,
+        1218.0
       ],
       "max_connections": 5
     },
@@ -470,8 +726,8 @@
       "name": "Memphis",
       "region_id": "region_4",
       "position": [
-        805.5,
-        703.2
+        1320.0,
+        913.5
       ],
       "max_connections": 6
     },
@@ -480,8 +736,8 @@
       "name": "Birmingham",
       "region_id": "region_4",
       "position": [
-        909.1,
-        833.6
+        1386.0,
+        1044.0
       ],
       "max_connections": 4
     },
@@ -490,8 +746,8 @@
       "name": "Miami",
       "region_id": "region_5",
       "position": [
-        1044.5,
-        1261.1
+        1804.0,
+        1334.0
       ],
       "max_connections": 1
     },
@@ -500,8 +756,8 @@
       "name": "Tampa",
       "region_id": "region_5",
       "position": [
-        914.3,
-        1123.7
+        1716.0,
+        1261.5
       ],
       "max_connections": 2
     },
@@ -510,8 +766,8 @@
       "name": "Jacksonville",
       "region_id": "region_5",
       "position": [
-        1031.9,
-        970.4
+        1760.0,
+        1160.0
       ],
       "max_connections": 4
     },
@@ -520,8 +776,8 @@
       "name": "Savannah",
       "region_id": "region_5",
       "position": [
-        1072.2,
-        789.9
+        1782.0,
+        1029.5
       ],
       "max_connections": 3
     },
@@ -530,8 +786,8 @@
       "name": "Atlanta",
       "region_id": "region_5",
       "position": [
-        999.4,
-        703.3
+        1628.0,
+        942.5
       ],
       "max_connections": 5
     },
@@ -540,8 +796,8 @@
       "name": "Raleigh",
       "region_id": "region_5",
       "position": [
-        1161.8,
-        605.8
+        1826.0,
+        855.5
       ],
       "max_connections": 5
     },
@@ -550,8 +806,8 @@
       "name": "Norfolk",
       "region_id": "region_5",
       "position": [
-        1329.3,
-        536.4
+        1914.0,
+        812.0
       ],
       "max_connections": 2
     },
@@ -560,8 +816,8 @@
       "name": "Detroit",
       "region_id": "region_6",
       "position": [
-        985.6,
-        223.8
+        1584.0,
+        464.0
       ],
       "max_connections": 5
     },
@@ -570,8 +826,8 @@
       "name": "Pittsburgh",
       "region_id": "region_6",
       "position": [
-        1138.8,
-        355.6
+        1716.0,
+        565.5
       ],
       "max_connections": 5
     },
@@ -580,8 +836,8 @@
       "name": "Washington Dc",
       "region_id": "region_6",
       "position": [
-        1223.9,
-        456.1
+        1870.0,
+        580.0
       ],
       "max_connections": 3
     },
@@ -590,8 +846,8 @@
       "name": "Philadelphia",
       "region_id": "region_6",
       "position": [
-        1316.4,
-        351.0
+        1936.0,
+        536.5
       ],
       "max_connections": 2
     },
@@ -600,8 +856,8 @@
       "name": "Buffalo",
       "region_id": "region_6",
       "position": [
-        1191.5,
-        170.7
+        1760.0,
+        377.0
       ],
       "max_connections": 3
     },
@@ -610,8 +866,8 @@
       "name": "New York",
       "region_id": "region_6",
       "position": [
-        1392.6,
-        250.3
+        1980.0,
+        420.5
       ],
       "max_connections": 3
     },
@@ -620,8 +876,8 @@
       "name": "Boston",
       "region_id": "region_6",
       "position": [
-        1528.3,
-        117.5
+        2002.0,
+        304.5
       ],
       "max_connections": 1
     }
@@ -1162,7 +1418,7 @@
   },
   "rule_overrides": {},
   "render_size": [
-    1648,
-    1361
+    2200,
+    1450
   ]
 }

@@ -123,7 +123,7 @@ func _make_market_card(plant_number, clickable):
 		texture_button.texture_normal = card_texture
 		texture_button.ignore_texture_size = true
 		texture_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		texture_button.custom_minimum_size = Vector2(104, 136)
+		texture_button.custom_minimum_size = Vector2(142, 186)
 		texture_button.disabled = not clickable
 		texture_button.modulate = Color(1, 1, 1, 1.0 if clickable else 0.72)
 		texture_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if clickable else Control.CURSOR_ARROW

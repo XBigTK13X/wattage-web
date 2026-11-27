@@ -138,10 +138,13 @@ func _rebuild_cities():
 		var region_active = active_regions.is_empty() or active_regions.has(city.region_id)
 		if not region_active and not show_inactive:
 			continue
+		var region_info = _map_definition.regions.get(city.region_id, {})
+		var region_color = Color.html(str(region_info.get("color", "#4a6fa5")))
 		var button = VW.Chrome.styled_button(city.name, 13)
 		button.custom_minimum_size = Vector2(114, 46)
 		button.position = city.position - Vector2(57, 23)
 		button.modulate = Color(1, 1, 1, 1.0 if region_active else 0.45)
+		button.add_theme_color_override("font_color", region_color.lightened(0.35) if region_active else Color(0.55, 0.58, 0.62))
 		button.pressed.connect(_on_city_tapped.bind(city_id))
 		_canvas.add_child(button)
 
@@ -194,9 +197,10 @@ func _draw():
 		var line_color = Color(0.45, 0.54, 0.68, 0.85) if both_active else Color(0.28, 0.32, 0.38, 0.35)
 		draw_line(start_pos, end_pos, line_color, 3.0)
 		var midpoint = (start_pos + end_pos) * 0.5
+		var badge_radius = 17.0 * _camera_zoom
+		var cost_font_size = max(10, int(round(13.0 * _camera_zoom)))
 		if badge_texture != null:
-			var badge_radius = 14.0 * _camera_zoom
 			draw_texture_rect(badge_texture, Rect2(midpoint - Vector2(badge_radius, badge_radius), Vector2(badge_radius * 2.0, badge_radius * 2.0)), false)
 		else:
-			draw_circle(midpoint, 12.0 * _camera_zoom, Color(0.12, 0.15, 0.21, 0.95))
-		draw_string(ThemeDB.fallback_font, midpoint + Vector2(-8, 5), str(edge.cost), HORIZONTAL_ALIGNMENT_CENTER, -1, 13, Color(0.96, 0.82, 0.35))
+			draw_circle(midpoint, badge_radius, Color(0.12, 0.15, 0.21, 0.95))
+		draw_string(ThemeDB.fallback_font, midpoint + Vector2(-badge_radius, cost_font_size * 0.38), str(edge.cost), HORIZONTAL_ALIGNMENT_CENTER, badge_radius * 2.0, cost_font_size, Color(0.96, 0.82, 0.35))
