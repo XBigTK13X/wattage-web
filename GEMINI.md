@@ -12,7 +12,7 @@
 - Project action items are tracked in `checklist/*.md` in numerical order (e.g., `checklist/01-framework.md`, `checklist/02-data-and-assets.md`, ...).
 - Before starting implementation work, check `checklist/` to find the earliest ordered file with unchecked `[ ]` items and work on the top-most unchecked item.
 - Each checklist item defines both the requirement to complete and how to test that it is complete and ready for verification.
-- When an item is completed and verified, check it off (`[x]`) and report how to verify it.
+- When an item is completed, always check it off (`[x]`) in its `checklist/*.md` file and report how to verify it.
 
 ## Requirements
 - Do not use any of the real life board game images in this version of the game
