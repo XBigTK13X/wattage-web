@@ -21,7 +21,7 @@ func _ready():
 	panel.add_child(layout)
 
 	var title_label = Label.new()
-	title_label.text = "Volt Web Framework Verification"
+	title_label.text = "Wattage Web Framework Verification"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	layout.add_child(title_label)
 

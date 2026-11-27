@@ -45,7 +45,7 @@ func _ensure_ui():
 	panel.add_child(vertical_box)
 
 	var title_label = Label.new()
-	title_label.text = "Volt Web"
+	title_label.text = "Wattage Web"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 28)
 	title_label.add_theme_color_override("font_color", Color(0.96, 0.77, 0.26))

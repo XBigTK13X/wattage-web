@@ -154,7 +154,7 @@ func _on_action_result(result):
 
 func _on_host_discovered(host_info):
 	var address = str(host_info.get("address", ""))
-	var title = str(host_info.get("host_title", "Volt Web Host"))
+	var title = str(host_info.get("host_title", "Wattage Web Host"))
 	var join_button = VW.Chrome.styled_button("Join " + title + " (" + address + ")", 14)
 	join_button.pressed.connect(func():
 		_host_ip_input.text = address

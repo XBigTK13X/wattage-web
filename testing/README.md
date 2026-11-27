@@ -1,4 +1,4 @@
-# Volt Web Testing & Verification Guide
+# Wattage Web Testing & Verification Guide
 
 ## Headless Automated Suite
 

@@ -18,8 +18,8 @@ encrypt_directory=false
 
 version/code=1
 version/name="0.1.0"
-package/unique_name="org.voltweb.client"
-package/name="Volt Web"
+package/unique_name="org.wattageweb.client"
+package/name="Wattage Web"
 screen/support_small=true
 screen/support_normal=true
 screen/support_large=true

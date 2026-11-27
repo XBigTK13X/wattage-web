@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Volt Web"
+config/name="Wattage Web"
 run/main_scene="res://scene/Bootstrap/Bootstrap.tscn"
 config/features=PackedStringArray("4.7")
 boot_splash/bg_color=Color(0.05, 0.04, 0.03, 1)

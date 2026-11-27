@@ -5,7 +5,7 @@ const SeatRegistry = preload("res://script/instance/network/seat_registry.gd")
 
 const DEFAULT_PORT = 4242
 const DISCOVERY_PORT = 4243
-const DISCOVERY_MAGIC = "VOLT_WEB_DISCOVER"
+const DISCOVERY_MAGIC = "WATTAGE_WEB_DISCOVER"
 
 enum Mode {
 	NONE,
@@ -35,7 +35,7 @@ var _discovery_client = null
 var _discovery_active = false
 var _action_validator = Callable()
 var _state_provider = Callable()
-var _host_title = "Volt Web Match"
+var _host_title = "Wattage Web Match"
 var _host_port = DEFAULT_PORT
 
 func _ready():
@@ -55,7 +55,7 @@ func set_action_validator(validator):
 func set_state_provider(provider):
 	_state_provider = provider
 
-func start_host(port = DEFAULT_PORT, host_title = "Volt Web Match"):
+func start_host(port = DEFAULT_PORT, host_title = "Wattage Web Match"):
 	stop_network()
 	_host_port = int(port)
 	_host_title = str(host_title)

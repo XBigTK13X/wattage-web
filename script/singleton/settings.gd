@@ -1,7 +1,7 @@
 extends Node
 
 var _settings = null
-var settings_path = "user://volt-web-settings.ini"
+var settings_path = "user://wattage-web-settings.ini"
 
 const DEFAULT_KEYBINDS = {
 	"pan_up": KEY_W,

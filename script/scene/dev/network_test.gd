@@ -22,7 +22,7 @@ func _ready():
 	panel.add_child(layout)
 
 	var title_label = Label.new()
-	title_label.text = "Volt Web Networking & Protocol Verification"
+	title_label.text = "Wattage Web Networking & Protocol Verification"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 22)
 	layout.add_child(title_label)
@@ -60,7 +60,7 @@ func _ready():
 	_run_self_test()
 
 func _on_start_host():
-	var result = VW.Network.start_host(4242, "Volt Web Test Host")
+	var result = VW.Network.start_host(4242, "Wattage Web Test Host")
 	_status_label.text = "Mode: Host (result=" + str(result) + ")"
 
 func _on_start_client():

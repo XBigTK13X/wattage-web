@@ -1,5 +1,5 @@
 ## Overarching Goal
-- **Volt Web** is a clean-room Godot implementation of the original (non-Recharged) board game *Power Grid* and all of its original maps and rulesets.
+- **Wattage Web** is a clean-room Godot implementation of the original (non-Recharged) board game *Power Grid* and all of its original maps and rulesets.
 - Supported control schemes:
   - Mouse and keyboard
   - Standard gamepad

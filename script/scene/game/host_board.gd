@@ -47,7 +47,7 @@ func _build_gui():
 	root_box.add_child(top_bar)
 
 	var match_label = Label.new()
-	match_label.text = str(_game_state.get("title", "Volt Web Match"))
+	match_label.text = str(_game_state.get("title", "Wattage Web Match"))
 	match_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	match_label.add_theme_font_size_override("font_size", 20)
 	top_bar.add_child(match_label)

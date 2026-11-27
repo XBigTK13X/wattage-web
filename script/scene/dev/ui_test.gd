@@ -17,7 +17,7 @@ func _ready():
 	panel.add_child(layout)
 
 	var title_label = Label.new()
-	title_label.text = "Volt Web Clean-Room UI & Board Graphics"
+	title_label.text = "Wattage Web Clean-Room UI & Board Graphics"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 22)
 	layout.add_child(title_label)

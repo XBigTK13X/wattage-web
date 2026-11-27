@@ -22,7 +22,7 @@ func _build_gui():
 	main_panel.add_child(outer_box)
 
 	var title_label = Label.new()
-	title_label.text = "VOLT WEB"
+	title_label.text = "WATTAGE WEB"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 34)
 	title_label.add_theme_color_override("font_color", Color(0.96, 0.77, 0.26))
