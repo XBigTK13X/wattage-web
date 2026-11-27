@@ -47,6 +47,10 @@ func _build_gui():
 	new_match_button.pressed.connect(func(): VW.Scenes.goto(VW.Scenes.MATCH_SETUP))
 	menu_column.add_child(new_match_button)
 
+	var client_button = VW.Chrome.styled_button("Join as Client")
+	client_button.pressed.connect(func(): VW.Scenes.goto(VW.Scenes.CLIENT_SCREEN))
+	menu_column.add_child(client_button)
+
 	var settings_button = VW.Chrome.styled_button("Settings")
 	settings_button.pressed.connect(func(): VW.Scenes.goto(VW.Scenes.SETTINGS_MENU))
 	menu_column.add_child(settings_button)

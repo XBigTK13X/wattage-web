@@ -3,10 +3,10 @@
 - Supported control schemes:
   - Mouse and keyboard
   - Standard gamepad
-  - Android device running in client mode (acting as both a gamepad and a private second screen)
+  - Android device running in client mode (acting as a private second screen and action controller)
 - **Host/Client Architecture**:
   - **Host mode**: Runs the game, renders the main board, accepts local input, and allows remote clients to join. All authoritative board game state is kept and managed exclusively on the host instance.
-  - **Client mode**: Thin client (including Android devices) that sends action messages to the host to commit game actions and receives state views from the host to display the second screen and controller UI.
+  - **Client mode**: Thin client (including Android devices) that sends action messages to the host to commit game actions and receives state views from the host to display the second screen and available actions.
 
 ## Checklist Workflow
 - Project action items are tracked in `checklist/*.md` in numerical order (e.g., `checklist/01-framework.md`, `checklist/02-data-and-assets.md`, ...).
