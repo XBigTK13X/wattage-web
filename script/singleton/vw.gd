@@ -2,8 +2,10 @@ extends Node
 
 var ActionQueue
 var AssetCache
+var Assets
 var Audio
 var Chrome
+var Database
 var DataStructure
 var EventLog
 var Loading
@@ -32,7 +34,9 @@ func reset():
 	Settings = _singleton("settings")
 	ActionQueue = _singleton("action_queue")
 	AssetCache = _singleton("asset_cache")
+	Assets = _singleton("assets")
 	Audio = _singleton("audio")
 	Chrome = _singleton("chrome")
+	Database = _singleton("database")
 	Loading = _singleton("loading")
 	Scenes = _singleton("scenes")

@@ -4,9 +4,9 @@ Main screen presentation for the host instance displaying the shared board, mark
 
 ---
 
-- [ ] **Host lobby & match configuration screen**
-  - *Requirement*: Build a main menu, settings menu, and match setup screen (reusing menu layout and `VW.Chrome` nine-patch `CenterContainer` dialog patterns from `airef/dredmor/script/scene/game/main_menu.gd` and `settings_menu.gd`) to select map, plant deck, total table seats (2-6), number of human players, automa type for remaining seats (**Frida** print-and-play or official **Robots**), player names/colors, and local vs remote client seat bindings.
-  - *Test*: Configure a 4-seat match on the Germany map with 2 humans and 2 automa seats (testing both Frida and Robots options), start the game, and verify the board initializes with the selected seat configuration.
+- [ ] **Host main menu, game library & match configuration screen**
+  - *Requirement*: Build a main menu, settings menu, and match setup screen (reusing menu layout and `VW.Chrome` nine-patch `CenterContainer` dialog patterns from `airef/dredmor/script/scene/game/main_menu.gd` and `settings_menu.gd`). The host main menu lists all in-progress/saved games in persistent storage, lets the user resume any stored game or start a new game (with only one active game running at a time), and allows returning to the main menu mid-game without discarding the paused game. Match setup configures map, plant deck, total table seats (2-6), number of human players, automa type for remaining seats (**Frida** print-and-play or official **Robots**), player names/colors, and local vs remote client seat bindings.
+  - *Test*: Start a 4-seat match on the Germany map with 2 humans and 2 automa seats, play into Phase 2, return to the main menu, start a second game, then return again and resume the first game from the stored list.
 
 - [ ] **Interactive game map view**
   - *Requirement*: Render regions (highlighting active vs inactive regions), cities with 10/15/20 house slots, connection lines with cost badges, and pan/zoom camera controls; highlight reachable/affordable cities during Phase 4.

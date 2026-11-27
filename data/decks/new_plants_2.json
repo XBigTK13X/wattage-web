@@ -1,0 +1,508 @@
+{
+  "id": "new_plants_2",
+  "cards": [
+    {
+      "number": 3,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 1,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 4,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 1,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 5,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 1,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 6,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 1,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 7,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 1,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 8,
+      "fuel_type": "hybrid_oil_garbage",
+      "accepted_fuels": [
+        "oil",
+        "garbage"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": true
+    },
+    {
+      "number": 9,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 10,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 11,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 1,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 12,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 13,
+      "fuel_type": "uranium",
+      "accepted_fuels": [
+        "uranium"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 14,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 15,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 16,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 3,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 17,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 2,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 18,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 3,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 19,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 3,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 20,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 4,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 21,
+      "fuel_type": "uranium",
+      "accepted_fuels": [
+        "uranium"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 3,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 22,
+      "fuel_type": "hybrid_oil_garbage",
+      "accepted_fuels": [
+        "oil",
+        "garbage"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": true
+    },
+    {
+      "number": 23,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 4,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 24,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 3,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 25,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 26,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 4,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 27,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 1,
+      "cities_powered": 4,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 28,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 3,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 29,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 30,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 31,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 4,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 32,
+      "fuel_type": "uranium",
+      "accepted_fuels": [
+        "uranium"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 33,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 34,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 35,
+      "fuel_type": "hybrid_oil_garbage",
+      "accepted_fuels": [
+        "oil",
+        "garbage"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": true
+    },
+    {
+      "number": 36,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 5,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 37,
+      "fuel_type": "uranium",
+      "accepted_fuels": [
+        "uranium"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 38,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 3,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 39,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 40,
+      "fuel_type": "coal",
+      "accepted_fuels": [
+        "coal"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 42,
+      "fuel_type": "oil",
+      "accepted_fuels": [
+        "oil"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 44,
+      "fuel_type": "ecological",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 6,
+      "is_step_three": false,
+      "is_ecological": true,
+      "is_hybrid": false
+    },
+    {
+      "number": 46,
+      "fuel_type": "garbage",
+      "accepted_fuels": [
+        "garbage"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 7,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 50,
+      "fuel_type": "uranium",
+      "accepted_fuels": [
+        "uranium"
+      ],
+      "fuel_cost": 2,
+      "cities_powered": 7,
+      "is_step_three": false,
+      "is_ecological": false,
+      "is_hybrid": false
+    },
+    {
+      "number": 0,
+      "fuel_type": "step3",
+      "accepted_fuels": [],
+      "fuel_cost": 0,
+      "cities_powered": 0,
+      "is_step_three": true,
+      "is_ecological": false,
+      "is_hybrid": false
+    }
+  ]
+}

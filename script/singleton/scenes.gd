@@ -1,11 +1,14 @@
 extends Node
 
+var AUDIO_TEST = "dev/audio_test"
 var BOOTSTRAP = "Bootstrap"
+var DATABASE_TEST = "dev/database_test"
 var FRAMEWORK_TEST = "dev/framework_test"
 var INPUT_TEST = "dev/input_test"
 var MAIN_MENU = "game/main_menu"
+var UI_TEST = "dev/ui_test"
 
-var FIRST_SCENE = FRAMEWORK_TEST
+var FIRST_SCENE = UI_TEST
 
 func quit():
 	get_tree().quit()

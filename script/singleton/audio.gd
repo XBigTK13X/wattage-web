@@ -47,6 +47,23 @@ func apply_preview_volumes(master_percent, music_percent, sound_effects_percent,
 func register_cue(cue_name, resource_path):
 	_cue_paths[str(cue_name)] = str(resource_path)
 
+func register_default_cues():
+	var default_cues = [
+		"bid_placed",
+		"auction_won",
+		"resource_bought",
+		"city_built",
+		"phase_change",
+		"turn_alert",
+		"step_transition",
+		"power_up",
+		"action_invalid",
+		"ui_click",
+		"ui_hover"
+	]
+	for cue_name in default_cues:
+		register_cue(cue_name, "res://asset/audio/" + cue_name + ".wav")
+
 func _clear_sound_effect_pool():
 	for player in _sound_effect_players:
 		if is_instance_valid(player):
@@ -68,6 +85,7 @@ func _setup_sound_effect_pool(target_parent):
 
 func setup(root):
 	_root = root
+	register_default_cues()
 	var target_parent = root if root != null else self
 	if VW.Settings == null or VW.Settings.audio_enabled():
 		if _music_player != null:

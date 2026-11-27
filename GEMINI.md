@@ -13,6 +13,8 @@
 - Before starting implementation work, check `checklist/` to find the earliest ordered file with unchecked `[ ]` items and work on the top-most unchecked item.
 - Each checklist item defines both the requirement to complete and how to test that it is complete and ready for verification.
 - When an item is completed, always check it off (`[x]`) in its `checklist/*.md` file and report how to verify it.
+- When finishing an item, make sure the scenes.gd `var FIRST_SCENE = <scene>` points to the correct scene for human verification
+
 
 ## Requirements
 - Do not use any of the real life board game images in this version of the game
