@@ -8,6 +8,7 @@ var Chrome
 var Database
 var DataStructure
 var EventLog
+var GameLibrary
 var Loading
 var Log
 var Math
@@ -39,6 +40,7 @@ func reset():
 	Audio = _singleton("audio")
 	Chrome = _singleton("chrome")
 	Database = _singleton("database")
+	GameLibrary = _singleton("game_library")
 	Loading = _singleton("loading")
 	Network = _singleton("network")
 	Scenes = _singleton("scenes")
