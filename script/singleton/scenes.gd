@@ -16,7 +16,7 @@ var SAVE_TEST = "dev/save_test"
 var SETTINGS_MENU = "game/settings_menu"
 var UI_TEST = "dev/ui_test"
 
-var FIRST_SCENE = SAVE_TEST
+var FIRST_SCENE = MAIN_MENU
 
 func quit():
 	get_tree().quit()

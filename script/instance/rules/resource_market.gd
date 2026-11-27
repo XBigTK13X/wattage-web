@@ -104,3 +104,38 @@ static func can_store_resource(player, deck_id, resource_type, add_amount = 1):
 		return false
 	var remaining_hybrid_for_oil = (hybrid_oil_coal_cap - overflow_coal) + (hybrid_oil_garbage_cap - overflow_garbage)
 	return next_oil <= pure_oil_cap + remaining_hybrid_for_oil
+
+static func clamp_stored_resources(player, deck_id):
+	var stored = player.get("stored_resources", {})
+	var pure_coal_cap = 0
+	var pure_oil_cap = 0
+	var pure_garbage_cap = 0
+	var pure_uranium_cap = 0
+	var hybrid_oil_coal_cap = 0
+	var hybrid_oil_garbage_cap = 0
+
+	for plant_number in player.get("plants", []):
+		var plant = VW.Database.get_plant(deck_id, int(plant_number))
+		if plant == null:
+			continue
+		var cap = int(plant.fuel_cost) * 2
+		if plant.fuel_type == "coal":
+			pure_coal_cap += cap
+		elif plant.fuel_type == "oil":
+			pure_oil_cap += cap
+		elif plant.fuel_type == "garbage":
+			pure_garbage_cap += cap
+		elif plant.fuel_type == "uranium":
+			pure_uranium_cap += cap
+		elif plant.fuel_type == "hybrid_oil_coal":
+			hybrid_oil_coal_cap += cap
+		elif plant.fuel_type == "hybrid_oil_garbage":
+			hybrid_oil_garbage_cap += cap
+
+	stored["uranium"] = min(int(stored.get("uranium", 0)), pure_uranium_cap)
+	stored["coal"] = min(int(stored.get("coal", 0)), pure_coal_cap + hybrid_oil_coal_cap)
+	stored["garbage"] = min(int(stored.get("garbage", 0)), pure_garbage_cap + hybrid_oil_garbage_cap)
+	var overflow_coal = max(0, int(stored.get("coal", 0)) - pure_coal_cap)
+	var overflow_garbage = max(0, int(stored.get("garbage", 0)) - pure_garbage_cap)
+	var remaining_hybrid_for_oil = (hybrid_oil_coal_cap - overflow_coal) + (hybrid_oil_garbage_cap - overflow_garbage)
+	stored["oil"] = min(int(stored.get("oil", 0)), pure_oil_cap + remaining_hybrid_for_oil)

@@ -4,6 +4,7 @@ const ResourceMarket = preload("res://script/instance/rules/resource_market.gd")
 const PlantMarket = preload("res://script/instance/rules/plant_market.gd")
 const MapGraph = preload("res://script/instance/rules/map_graph.gd")
 const NetworkProtocol = preload("res://script/instance/network/protocol.gd")
+const RobotsExpansion = preload("res://script/instance/rules/robots_expansion.gd")
 
 const BUREAUCRACY_PAYOUTS = [
 	10, 22, 33, 44, 54, 64, 73, 82, 90, 98,
@@ -18,27 +19,71 @@ static func create_match(config):
 	var seat_configs = config.get("seats", [])
 	var seat_count = seat_configs.size()
 
+	var robot_seats = []
+	for index in range(seat_count):
+		if str(seat_configs[index].get("control_mode", "local")) == "automa_robots":
+			robot_seats.append(index)
+	var random_profiles = RobotsExpansion.create_random_profiles(robot_seats.size()) if not robot_seats.is_empty() else []
+	var robot_cursor = 0
+	var frida_cursor = 0
+
 	var count_info = _player_count_info(map_definition, seat_count)
 	var players = []
+	var human_order = []
+	var frida_seats = []
 	var turn_order = []
 	for index in range(seat_count):
 		var seat = seat_configs[index]
+		var mode = str(seat.get("control_mode", "local"))
+		var start_elektro = 50
+		var robot_profile = {}
+		var frida_side = -1
+		if mode == "automa_robots":
+			if seat.has("robot_profile"):
+				robot_profile = seat.get("robot_profile").duplicate(true)
+			else:
+				robot_profile = random_profiles[robot_cursor]
+			robot_cursor += 1
+			if str(robot_profile.get("ability", "")) == RobotsExpansion.ABILITY_START_100_ELEKTRO:
+				start_elektro = 100
+		elif mode == "automa_frida":
+			start_elektro = 0
+			frida_side = frida_cursor % 2
+			frida_cursor += 1
+			frida_seats.append(index)
+		if mode != "automa_frida":
+			human_order.append(index)
 		players.append({
 			seat_index = index,
 			player_name = str(seat.get("player_name", "Player " + str(index + 1))),
 			color = str(seat.get("color", "red")),
-			control_mode = str(seat.get("control_mode", "local")),
-			elektro = 50,
+			control_mode = mode,
+			elektro = start_elektro,
 			plants = [],
 			stored_resources = { coal = 0, oil = 0, garbage = 0, uranium = 0 },
-			built_cities = []
+			built_cities = [],
+			city_score = 0,
+			built_this_round = 0,
+			frida_side = frida_side,
+			robot_profile = robot_profile
 		})
 		turn_order.append(index)
 
 	if not bool(config.get("preserve_initial_order", false)):
-		turn_order.shuffle()
+		if not frida_seats.is_empty():
+			human_order.shuffle()
+			turn_order = []
+			if frida_seats.size() >= 1:
+				turn_order.append(frida_seats[0])
+			turn_order.append_array(human_order)
+			for frida_idx in range(1, frida_seats.size()):
+				turn_order.append(frida_seats[frida_idx])
+		else:
+			turn_order.shuffle()
 
-	var active_regions = _select_active_regions(map_definition, int(count_info.get("regions", 6)))
+	var active_regions = config.get("active_regions", [])
+	if active_regions.is_empty():
+		active_regions = _select_active_regions(map_definition, int(count_info.get("regions", 6)))
 	var deck_setup = PlantMarket.setup_deck_and_market(deck_id, int(count_info.get("removed_plants", 0)))
 	var start_resources = map_definition.start_resources if map_definition != null else [1, 3, 7, 14]
 
@@ -50,6 +95,7 @@ static func create_match(config):
 		deck_id = deck_id,
 		updated_at = int(Time.get_unix_time_from_system()),
 		step = 1,
+		step_three_pending = false,
 		phase = 2,
 		round_number = 1,
 		active_regions = active_regions,
@@ -66,6 +112,8 @@ static func create_match(config):
 			plant_number = 0,
 			current_bid = 0,
 			high_bidder_seat = -1,
+			auctioneer_seat = -1,
+			last_winner_seat = -1,
 			passed_seats = [],
 			bought_this_round = [],
 			round_passed_seats = [],
@@ -94,10 +142,41 @@ static func _select_active_regions(map_definition, target_count):
 		return []
 	var region_keys = map_definition.regions.keys()
 	region_keys.sort()
+	if region_keys.is_empty():
+		return []
+	var count = min(target_count, region_keys.size())
 	var selected = []
-	for index in range(min(target_count, region_keys.size())):
-		selected.append(region_keys[index])
+	var queue = [region_keys[0]]
+	while not queue.is_empty() and selected.size() < count:
+		var current_region = queue.pop_front()
+		if selected.has(current_region):
+			continue
+		selected.append(current_region)
+		var neighbors = []
+		for pair in map_definition.region_connections:
+			if pair.size() >= 2:
+				if str(pair[0]) == current_region and not selected.has(str(pair[1])):
+					neighbors.append(str(pair[1]))
+				elif str(pair[1]) == current_region and not selected.has(str(pair[0])):
+					neighbors.append(str(pair[0]))
+		neighbors.sort()
+		for neighbor in neighbors:
+			queue.append(neighbor)
+	for fallback_region in region_keys:
+		if selected.size() >= count:
+			break
+		if not selected.has(fallback_region):
+			selected.append(fallback_region)
 	return selected
+
+static func player_city_count(player):
+	return max(player.built_cities.size(), int(player.get("city_score", 0)))
+
+static func _max_connected_cities(state):
+	var max_cities = 0
+	for some_player in state.players:
+		max_cities = max(max_cities, player_city_count(some_player))
+	return max_cities
 
 static func determine_player_order(state):
 	var order = state.turn_order.duplicate()
@@ -105,8 +184,12 @@ static func determine_player_order(state):
 	order.sort_custom(func(seat_first, seat_second):
 		var player_first = players[seat_first]
 		var player_second = players[seat_second]
-		var cities_first = player_first.built_cities.size()
-		var cities_second = player_second.built_cities.size()
+		var last_first = RobotsExpansion.has_ability(player_first, RobotsExpansion.ABILITY_ALWAYS_LAST_ORDER)
+		var last_second = RobotsExpansion.has_ability(player_second, RobotsExpansion.ABILITY_ALWAYS_LAST_ORDER)
+		if last_first != last_second:
+			return not last_first
+		var cities_first = player_city_count(player_first)
+		var cities_second = player_city_count(player_second)
 		if cities_first != cities_second:
 			return cities_first > cities_second
 		var max_plant_first = _highest_plant(player_first)
@@ -117,6 +200,8 @@ static func determine_player_order(state):
 	return order
 
 static func _highest_plant(player):
+	if str(player.get("control_mode", "")) == "automa_frida":
+		return int(player.plants[0]) if not player.plants.is_empty() else 0
 	var best = 0
 	for plant_number in player.plants:
 		best = max(best, int(plant_number))
@@ -160,23 +245,51 @@ static func apply_action(state, seat_index, action_name, parameters = {}):
 		return _handle_pass_phase(state, seat_index)
 	return { accepted = false, error_code = NetworkProtocol.ERROR_UNKNOWN_ACTION, message = "Unknown action" }
 
+static func _frida_surcharge_for_human(state):
+	if not state.has("frida_state"):
+		return 0
+	var phase_cards = state.frida_state.get("phase_cards", [])
+	if phase_cards.is_empty():
+		return 0
+	var card = phase_cards[0]
+	var max_ante = 0
+	for player in state.players:
+		if str(player.control_mode) != "automa_frida":
+			continue
+		var seat = int(player.seat_index)
+		if state.auction.bought_this_round.has(seat) or state.auction.round_passed_seats.has(seat):
+			continue
+		var side = int(player.get("frida_side", 0))
+		var choice = int(card.get("market1" if side == 0 else "market2", -1))
+		if choice <= 0:
+			continue
+		var ante = int(card.get("ante1" if side == 0 else "ante2", 0))
+		max_ante = max(max_ante, ante)
+	return max_ante
+
 static func _handle_select_plant(state, seat_index, parameters):
 	if int(state.phase) != 2 or bool(state.auction.active):
 		return { accepted = false, error_code = NetworkProtocol.ERROR_INVALID_PHASE, message = "Cannot nominate plant now" }
 	var plant_number = int(parameters.get("plant_number", 0))
 	if not state.actual_market.has(plant_number):
 		return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Plant not in Actual Market" }
-	var opening_bid = int(parameters.get("bid", plant_number))
-	if opening_bid < plant_number:
-		opening_bid = plant_number
 	var player = state.players[seat_index]
-	if int(player.elektro) < opening_bid:
-		return { accepted = false, error_code = NetworkProtocol.ERROR_INSUFFICIENT_ELEKTRO, message = "Insufficient Elektro" }
+	var mode = str(player.control_mode)
+	var surcharge = 0 if mode == "automa_frida" else _frida_surcharge_for_human(state)
+	var min_bid = plant_number + surcharge
+	var opening_bid = int(parameters.get("bid", min_bid))
+	if opening_bid < min_bid:
+		opening_bid = min_bid
+	if mode != "automa_frida":
+		var required_elektro = RobotsExpansion.effective_bid_cost(player, opening_bid) if mode == "automa_robots" else opening_bid
+		if int(player.elektro) < required_elektro:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_INSUFFICIENT_ELEKTRO, message = "Insufficient Elektro" }
 
 	state.auction.active = true
 	state.auction.plant_number = plant_number
 	state.auction.current_bid = opening_bid
 	state.auction.high_bidder_seat = seat_index
+	state.auction["auctioneer_seat"] = seat_index
 	state.auction.passed_seats = []
 	for done_seat in state.auction.bought_this_round:
 		state.auction.passed_seats.append(done_seat)
@@ -194,7 +307,8 @@ static func _handle_place_bid(state, seat_index, parameters):
 	if next_bid <= int(state.auction.current_bid):
 		return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Bid must exceed current bid" }
 	var player = state.players[seat_index]
-	if int(player.elektro) < next_bid:
+	var required_elektro = RobotsExpansion.effective_bid_cost(player, next_bid) if str(player.control_mode) == "automa_robots" else next_bid
+	if int(player.elektro) < required_elektro:
 		return { accepted = false, error_code = NetworkProtocol.ERROR_INSUFFICIENT_ELEKTRO, message = "Insufficient Elektro" }
 	state.auction.current_bid = next_bid
 	state.auction.high_bidder_seat = seat_index
@@ -233,29 +347,54 @@ static func _complete_auction(state):
 	var plant_number = int(state.auction.plant_number)
 	var cost = int(state.auction.current_bid)
 	var player = state.players[winner_seat]
-	player.elektro = int(player.elektro) - cost
+	var mode = str(player.control_mode)
+	if mode == "automa_frida":
+		if player.plants.is_empty():
+			player.plants.append(plant_number)
+		elif plant_number > int(player.plants[0]):
+			player.plants.push_front(plant_number)
+		else:
+			player.plants.insert(1, plant_number)
+		if player.plants.size() > 3:
+			player.plants.pop_back()
+	else:
+		var paid_cost = RobotsExpansion.effective_bid_cost(player, cost) if mode == "automa_robots" else cost
+		player.elektro = int(player.elektro) - paid_cost
 
-	var map_definition = VW.Database.get_map(state.map_id)
-	var count_info = _player_count_info(map_definition, state.players.size())
-	var max_plants = int(count_info.get("max_plants", 3))
-	if player.plants.size() >= max_plants:
+		var map_definition = VW.Database.get_map(state.map_id)
+		var count_info = _player_count_info(map_definition, state.players.size())
+		var max_plants = int(count_info.get("max_plants", 3))
+		if player.plants.size() >= max_plants:
+			player.plants.sort()
+			player.plants.pop_front()
+		player.plants.append(plant_number)
 		player.plants.sort()
-		player.plants.pop_front()
-	player.plants.append(plant_number)
-	player.plants.sort()
+		ResourceMarket.clamp_stored_resources(player, state.deck_id)
 
 	state.actual_market.erase(plant_number)
-	PlantMarket.draw_replacement(state)
+	PlantMarket.draw_replacement(state, _max_connected_cities(state))
 	state.auction.active = false
+	state.auction["last_winner_seat"] = winner_seat
 	state.auction.bought_this_round.append(winner_seat)
 	state.auction.any_plant_sold_this_round = true
 	_advance_phase_two_turn(state)
 
 static func _advance_phase_two_turn(state):
 	var order = state.turn_order
+	var auctioneer_seat = int(state.auction.get("auctioneer_seat", -1))
+	var last_winner = int(state.auction.get("last_winner_seat", -1))
+	if auctioneer_seat >= 0 and last_winner >= 0 and last_winner != auctioneer_seat:
+		var auctioneer_player = state.players[auctioneer_seat]
+		if str(auctioneer_player.control_mode) != "automa_frida" and not state.auction.bought_this_round.has(auctioneer_seat) and not state.auction.round_passed_seats.has(auctioneer_seat):
+			var retained_index = order.find(auctioneer_seat)
+			if retained_index >= 0:
+				state.auction["last_winner_seat"] = -1
+				state.active_turn_position = retained_index
+				return
 	for index in range(order.size()):
 		var candidate = int(order[index])
 		if not state.auction.bought_this_round.has(candidate) and not state.auction.round_passed_seats.has(candidate):
+			state.auction["last_winner_seat"] = -1
 			state.active_turn_position = index
 			return
 	if not bool(state.auction.any_plant_sold_this_round):
@@ -265,7 +404,8 @@ static func _advance_phase_two_turn(state):
 			var lowest = int(combined[0])
 			state.actual_market.erase(lowest)
 			state.futures_market.erase(lowest)
-			PlantMarket.draw_replacement(state)
+			PlantMarket.draw_replacement(state, _max_connected_cities(state))
+	PlantMarket.finalize_step_three_if_pending(state)
 	if int(state.round_number) == 1:
 		determine_player_order(state)
 	state.phase = 3
@@ -292,41 +432,47 @@ static func _handle_buy_resource(state, seat_index, parameters):
 static func _handle_build_city(state, seat_index, parameters):
 	var city_id = str(parameters.get("city_id", ""))
 	var map_definition = VW.Database.get_map(state.map_id)
-	var total_cost = MapGraph.city_build_cost(map_definition, state, seat_index, city_id)
-	if total_cost < 0:
-		return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Cannot build in " + city_id }
 	var player = state.players[seat_index]
-	if int(player.elektro) < total_cost:
-		return { accepted = false, error_code = NetworkProtocol.ERROR_INSUFFICIENT_ELEKTRO, message = "Insufficient Elektro (need " + str(total_cost) + ")" }
+	var mode = str(player.control_mode)
+	var total_cost = 0
+	if mode == "automa_frida":
+		var check_cost = MapGraph.city_build_cost(map_definition, state, seat_index, city_id)
+		if check_cost < 0:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Cannot build in " + city_id }
+	elif mode == "automa_robots":
+		var forbid_pass_through = str(player.get("robot_profile", {}).get("build", "")) == RobotsExpansion.BUILD_LAST_PLAYER_CHOOSES
+		total_cost = RobotsExpansion._city_cost_for_robot(map_definition, state, player, city_id, forbid_pass_through)
+		if total_cost < 0:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Cannot build in " + city_id }
+		if int(player.elektro) < total_cost:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_INSUFFICIENT_ELEKTRO, message = "Insufficient Elektro (need " + str(total_cost) + ")" }
+	else:
+		total_cost = MapGraph.city_build_cost(map_definition, state, seat_index, city_id)
+		if total_cost < 0:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Cannot build in " + city_id }
+		if int(player.elektro) < total_cost:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_INSUFFICIENT_ELEKTRO, message = "Insufficient Elektro (need " + str(total_cost) + ")" }
 
 	player.elektro -= total_cost
 	player.built_cities.append(city_id)
+	player["city_score"] = max(player.built_cities.size(), int(player.get("city_score", 0)) + 1)
+	player["built_this_round"] = int(player.get("built_this_round", 0)) + 1
 	var occupants = state.city_occupancy.get(city_id, [])
 	occupants.append(seat_index)
 	state.city_occupancy[city_id] = occupants
 
-	var max_cities = 0
-	for some_player in state.players:
-		max_cities = max(max_cities, some_player.built_cities.size())
+	var max_cities = _max_connected_cities(state)
 	PlantMarket.remove_plants_at_or_below(state, max_cities)
-
-	var count_info = _player_count_info(map_definition, state.players.size())
-	if int(state.step) == 1 and max_cities >= int(count_info.get("step_two_cities", 7)):
-		state.step = 2
-		var combined = state.actual_market + state.futures_market
-		combined.sort()
-		if not combined.is_empty():
-			var lowest = int(combined[0])
-			state.actual_market.erase(lowest)
-			state.futures_market.erase(lowest)
-			PlantMarket.draw_replacement(state)
-	if max_cities >= int(count_info.get("end_game_cities", 17)):
-		state.end_game_triggered = true
 
 	return { accepted = true, error_code = "", message = "Built " + city_id + " for " + str(total_cost) + "E" }
 
 static func _handle_power_plants(state, seat_index, parameters):
 	var player = state.players[seat_index]
+	if str(player.control_mode) == "automa_frida":
+		var frida_powered = player_city_count(player)
+		player["last_powered_cities"] = frida_powered
+		_advance_reverse_or_forward_turn(state)
+		return { accepted = true, error_code = "", message = "Frida powered " + str(frida_powered) + " cities" }
 	var selected_plants = parameters.get("plants", player.plants)
 	var powered_count = 0
 	for plant_number in selected_plants:
@@ -340,7 +486,8 @@ static func _handle_power_plants(state, seat_index, parameters):
 	var capped_powered = min(powered_count, player.built_cities.size())
 	player["last_powered_cities"] = capped_powered
 	if not bool(state.end_game_triggered):
-		var payout_index = clamp(capped_powered, 0, BUREAUCRACY_PAYOUTS.size() - 1)
+		var bonus = 1 if RobotsExpansion.has_ability(player, RobotsExpansion.ABILITY_INCOME_PLUS_1) else 0
+		var payout_index = clamp(capped_powered + bonus, 0, BUREAUCRACY_PAYOUTS.size() - 1)
 		player.elektro += BUREAUCRACY_PAYOUTS[payout_index]
 	_advance_reverse_or_forward_turn(state)
 	return { accepted = true, error_code = "", message = "Powered " + str(capped_powered) + " cities" }
@@ -379,6 +526,8 @@ static func _handle_pass_phase(state, seat_index):
 	if phase == 2:
 		if bool(state.auction.active):
 			return _handle_pass_auction(state, seat_index)
+		if int(state.round_number) == 1:
+			return { accepted = false, error_code = NetworkProtocol.ERROR_ILLEGAL_ACTION, message = "Cannot pass Phase 2 in Round 1" }
 		if not state.auction.round_passed_seats.has(seat_index):
 			state.auction.round_passed_seats.append(seat_index)
 		_advance_phase_two_turn(state)
@@ -395,9 +544,12 @@ static func _advance_reverse_or_forward_turn(state):
 			state.active_turn_position = int(state.active_turn_position) - 1
 			return
 		if phase == 3:
+			for some_player in state.players:
+				some_player["built_this_round"] = 0
 			state.phase = 4
 			state.active_turn_position = state.turn_order.size() - 1
 			return
+		_finalize_phase_four(state)
 		state.phase = 5
 		state.active_turn_position = 0
 		return
@@ -432,15 +584,39 @@ static func _restock_resources_and_cycle_market(state):
 		ResourceMarket.restock(state.resource_market, resource_type, int(rates[idx]), held)
 	PlantMarket.cycle_bureaucracy_market(state)
 
+static func _finalize_phase_four(state):
+	var map_definition = VW.Database.get_map(state.map_id)
+	var count_info = _player_count_info(map_definition, state.players.size())
+	var max_cities = _max_connected_cities(state)
+	if int(state.step) == 1 and max_cities >= int(count_info.get("step_two_cities", 7)):
+		state.step = 2
+		var combined = []
+		for plant_number in state.actual_market:
+			if int(plant_number) > 0:
+				combined.append(int(plant_number))
+		for plant_number in state.futures_market:
+			if int(plant_number) > 0:
+				combined.append(int(plant_number))
+		combined.sort()
+		if not combined.is_empty():
+			var lowest = int(combined[0])
+			state.actual_market.erase(lowest)
+			state.futures_market.erase(lowest)
+			PlantMarket.draw_replacement(state, max_cities)
+	PlantMarket.finalize_step_three_if_pending(state)
+	if max_cities >= int(count_info.get("end_game_cities", 17)):
+		state.end_game_triggered = true
+
 static func _finalize_end_game(state):
 	var standings = []
 	for player in state.players:
+		var is_frida = str(player.control_mode) == "automa_frida"
 		standings.append({
 			seat_index = player.seat_index,
 			player_name = player.player_name,
-			powered_cities = int(player.get("last_powered_cities", 0)),
-			elektro = int(player.elektro),
-			built_cities = player.built_cities.size()
+			powered_cities = player_city_count(player) if is_frida else int(player.get("last_powered_cities", 0)),
+			elektro = _highest_plant(player) if is_frida else int(player.elektro),
+			built_cities = player_city_count(player)
 		})
 	standings.sort_custom(func(first, second):
 		if first.powered_cities != second.powered_cities:
