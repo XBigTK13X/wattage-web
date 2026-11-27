@@ -6,6 +6,10 @@ const GAMES_DIRECTORY = "user://games/"
 
 var active_game = null
 
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_active_game()
+
 func _ensure_directory():
 	if not DirAccess.dir_exists_absolute(GAMES_DIRECTORY):
 		DirAccess.make_dir_recursive_absolute(GAMES_DIRECTORY)
@@ -60,6 +64,9 @@ func resume_game(game_id):
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return null
 	active_game = parsed
+	if VW.Network != null and active_game.has("players"):
+		VW.Network.seat_registry.configure_seats(active_game.players)
+		VW.Network.broadcast_state()
 	return active_game
 
 func suspend_active_game():

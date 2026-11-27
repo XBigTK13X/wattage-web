@@ -5,9 +5,11 @@ const PlantDefinition = preload("res://script/instance/data/plant_definition.gd"
 
 const MAPS_DIRECTORY = "res://data/maps/"
 const DECKS_DIRECTORY = "res://data/decks/"
+const FRIDA_CARDS_PATH = "res://data/automa/frida_cards.json"
 
 var _maps = {}
 var _decks = {}
+var _frida_cards = []
 var _loaded = false
 
 func ensure_loaded():
@@ -17,8 +19,10 @@ func ensure_loaded():
 func load_all():
 	_maps.clear()
 	_decks.clear()
+	_frida_cards.clear()
 	_load_maps_directory()
 	_load_decks_directory()
+	_load_frida_cards()
 	_loaded = true
 
 func _load_json_file(file_path):
@@ -105,3 +109,14 @@ func get_plant(deck_id, plant_number):
 	if deck == null:
 		return null
 	return deck.by_number.get(int(plant_number), null)
+
+func _load_frida_cards():
+	var payload = _load_json_file(FRIDA_CARDS_PATH)
+	if payload == null:
+		return
+	for card in payload.get("cards", []):
+		_frida_cards.append(card)
+
+func get_frida_cards():
+	ensure_loaded()
+	return _frida_cards.duplicate(true)

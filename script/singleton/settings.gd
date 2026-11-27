@@ -41,6 +41,8 @@ func load():
 			config.set_value("game", "audio_volume_sound_effects_percent", 100)
 		if not config.has_section_key("game", "audio_volume_dialogue_percent"):
 			config.set_value("game", "audio_volume_dialogue_percent", 100)
+		if not config.has_section_key("game", "show_inactive_regions"):
+			config.set_value("game", "show_inactive_regions", false)
 		if not config.has_section_key("display", "fullscreen"):
 			config.set_value("display", "fullscreen", false)
 		for action_name in DEFAULT_KEYBINDS.keys():
@@ -82,6 +84,9 @@ func dialogue_volume_percent():
 
 func fullscreen():
 	return bool(get_value("display", "fullscreen", false))
+
+func show_inactive_regions():
+	return bool(get_value("game", "show_inactive_regions", false))
 
 func apply_display_settings():
 	if _settings == null or DisplayServer.get_name() == "headless":

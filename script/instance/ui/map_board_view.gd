@@ -90,9 +90,12 @@ func _rebuild_nodes():
 	var current_phase = int(_game_state.get("phase", 1))
 	var step = int(_game_state.get("step", 1))
 
+	var show_inactive = VW.Settings != null and VW.Settings.show_inactive_regions()
 	for city_id in _map_definition.cities.keys():
 		var city = _map_definition.cities[city_id]
-		var region_active = active_regions.has(city.region_id)
+		var region_active = active_regions.is_empty() or active_regions.has(city.region_id)
+		if not region_active and not show_inactive:
+			continue
 		var region_info = _map_definition.regions.get(city.region_id, {})
 		var region_color = Color.html(str(region_info.get("color", "#4a6fa5")))
 		if not region_active:
@@ -141,14 +144,20 @@ func _draw():
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.07, 0.09, 0.12, 1.0))
 	if _map_definition == null:
 		return
+	var active_regions = _game_state.get("active_regions", []) if _game_state != null else []
+	var show_inactive = VW.Settings != null and VW.Settings.show_inactive_regions()
 	for edge in _map_definition.connections:
 		var source_city = _map_definition.cities.get(edge.from, null)
 		var target_city = _map_definition.cities.get(edge.to, null)
 		if source_city == null or target_city == null:
 			continue
+		var both_active = active_regions.is_empty() or (active_regions.has(source_city.region_id) and active_regions.has(target_city.region_id))
+		if not both_active and not show_inactive:
+			continue
 		var start_pos = source_city.position * _camera_zoom + _camera_offset
 		var end_pos = target_city.position * _camera_zoom + _camera_offset
-		draw_line(start_pos, end_pos, Color(0.45, 0.54, 0.68, 0.85), 3.0)
+		var line_color = Color(0.45, 0.54, 0.68, 0.85) if both_active else Color(0.28, 0.32, 0.38, 0.35)
+		draw_line(start_pos, end_pos, line_color, 3.0)
 		var midpoint = (start_pos + end_pos) * 0.5
 		draw_circle(midpoint, 12.0 * _camera_zoom, Color(0.12, 0.15, 0.21, 0.95))
 		draw_string(ThemeDB.fallback_font, midpoint + Vector2(-8, 5), str(edge.cost), HORIZONTAL_ALIGNMENT_CENTER, -1, 13, Color(0.96, 0.82, 0.35))

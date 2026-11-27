@@ -39,6 +39,14 @@ func _ready():
 	)
 	layout.add_child(fullscreen_toggle)
 
+	var inactive_regions_toggle = CheckButton.new()
+	inactive_regions_toggle.text = "Show Inactive Regions & Connections"
+	inactive_regions_toggle.button_pressed = VW.Settings.show_inactive_regions()
+	inactive_regions_toggle.toggled.connect(func(enabled):
+		VW.Settings.change("game", "show_inactive_regions", enabled)
+	)
+	layout.add_child(inactive_regions_toggle)
+
 	var volume_label = Label.new()
 	volume_label.text = "Master Volume: " + str(VW.Settings.master_volume_percent()) + "%"
 	layout.add_child(volume_label)

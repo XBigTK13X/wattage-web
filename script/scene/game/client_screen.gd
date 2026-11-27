@@ -2,6 +2,7 @@ extends Control
 
 const ClientDashboardView = preload("res://script/instance/ui/client_dashboard_view.gd")
 const ClientMapView = preload("res://script/instance/ui/client_map_view.gd")
+const RulesReferenceModal = preload("res://script/instance/ui/rules_reference_modal.gd")
 
 static func init_container():
 	return Control.new()
@@ -50,6 +51,11 @@ func _build_gui():
 	_map_tab_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_map_tab_button.pressed.connect(func(): _switch_view(1))
 	top_bar.add_child(_map_tab_button)
+
+	var rules_button = VW.Chrome.styled_button("Rules", 14)
+	rules_button.custom_minimum_size = Vector2(86, 42)
+	rules_button.pressed.connect(func(): RulesReferenceModal.open_modal(self, VW.Network.last_public_state))
+	top_bar.add_child(rules_button)
 
 	var exit_button = VW.Chrome.styled_button("Menu", 14)
 	exit_button.custom_minimum_size = Vector2(90, 42)
