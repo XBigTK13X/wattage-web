@@ -70,17 +70,23 @@ func _ready():
 	auction_layout.add_child(bid_controls)
 
 	var bid_one_button = VW.Chrome.styled_button("Bid +1", 14)
-	bid_one_button.custom_minimum_size = Vector2(90, 34)
+	bid_one_button.custom_minimum_size = Vector2(110, 36)
+	bid_one_button.icon = VW.Assets.get_icon_texture("action_bid_plus1")
+	bid_one_button.expand_icon = true
 	bid_one_button.pressed.connect(func(): bid_placed.emit(1))
 	bid_controls.add_child(bid_one_button)
 
 	var bid_five_button = VW.Chrome.styled_button("Bid +5", 14)
-	bid_five_button.custom_minimum_size = Vector2(90, 34)
+	bid_five_button.custom_minimum_size = Vector2(110, 36)
+	bid_five_button.icon = VW.Assets.get_icon_texture("action_bid_plus5")
+	bid_five_button.expand_icon = true
 	bid_five_button.pressed.connect(func(): bid_placed.emit(5))
 	bid_controls.add_child(bid_five_button)
 
 	var pass_button = VW.Chrome.styled_button("Pass", 14)
-	pass_button.custom_minimum_size = Vector2(90, 34)
+	pass_button.custom_minimum_size = Vector2(100, 36)
+	pass_button.icon = VW.Assets.get_icon_texture("action_pass")
+	pass_button.expand_icon = true
 	pass_button.pressed.connect(func(): auction_passed.emit())
 	bid_controls.add_child(pass_button)
 
@@ -111,6 +117,21 @@ func set_state(game_state):
 
 func _make_market_card(plant_number, clickable):
 	var plant = VW.Database.get_plant(_deck_id, plant_number)
+	var card_texture = VW.Assets.get_plant_card_texture(_deck_id, plant)
+	if card_texture != null:
+		var texture_button = TextureButton.new()
+		texture_button.texture_normal = card_texture
+		texture_button.ignore_texture_size = true
+		texture_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		texture_button.custom_minimum_size = Vector2(104, 136)
+		texture_button.disabled = not clickable
+		texture_button.modulate = Color(1, 1, 1, 1.0 if clickable else 0.72)
+		texture_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if clickable else Control.CURSOR_ARROW
+		VW.Chrome.attach_focus_ring(texture_button)
+		if clickable:
+			texture_button.pressed.connect(func(): plant_nominated.emit(plant_number))
+		return texture_button
+
 	var button = VW.Chrome.styled_button("#" + str(plant_number), 14)
 	button.custom_minimum_size = Vector2(118, 76)
 	if plant != null:

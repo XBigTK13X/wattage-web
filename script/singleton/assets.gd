@@ -7,6 +7,7 @@ const RESOURCE_COLORS = GameConstants.RESOURCE_COLORS
 
 var _house_textures = {}
 var _resource_textures = {}
+var _named_textures = {}
 var _theme = null
 
 func get_player_color(color_key):
@@ -15,16 +16,45 @@ func get_player_color(color_key):
 func get_resource_color(resource_type):
 	return RESOURCE_COLORS.get(str(resource_type), Color(0.5, 0.5, 0.5, 1.0))
 
+func _load_cached_texture(asset_path):
+	if _named_textures.has(asset_path):
+		return _named_textures[asset_path]
+	if ResourceLoader.exists(asset_path):
+		var loaded = load(asset_path)
+		if loaded != null:
+			_named_textures[asset_path] = loaded
+			return loaded
+	return null
+
+func get_ui_texture(asset_name):
+	return _load_cached_texture("res://asset/ui/" + str(asset_name) + ".png")
+
+func get_icon_texture(asset_name):
+	return _load_cached_texture("res://asset/icon/" + str(asset_name) + ".png")
+
+func get_token_texture(asset_name):
+	return _load_cached_texture("res://asset/token/" + str(asset_name) + ".png")
+
+func get_map_base_texture(map_id):
+	return _load_cached_texture("res://asset/map/map_" + str(map_id) + "_base.png")
+
+func get_map_overlay_texture(map_id):
+	return _load_cached_texture("res://asset/map/map_" + str(map_id) + "_overlay.png")
+
+func get_plant_card_texture(deck_id, plant_definition):
+	if plant_definition == null:
+		return null
+	var card_name = "step3" if plant_definition.is_step_three else ("plant_" + str(plant_definition.number).pad_zeros(2))
+	return _load_cached_texture("res://asset/card/" + str(deck_id) + "/" + card_name + ".png")
+
 func get_house_texture(color_key):
 	var key = str(color_key)
 	if _house_textures.has(key):
 		return _house_textures[key]
-	var asset_path = "res://asset/token/house_" + key + ".png"
-	if ResourceLoader.exists(asset_path):
-		var loaded = load(asset_path)
-		if loaded != null:
-			_house_textures[key] = loaded
-			return loaded
+	var loaded = get_token_texture("house_" + key)
+	if loaded != null:
+		_house_textures[key] = loaded
+		return loaded
 	var fill_color = get_player_color(key)
 	var border_color = fill_color.darkened(0.45)
 	var image = Image.create(32, 32, false, Image.FORMAT_RGBA8)
@@ -44,12 +74,16 @@ func get_resource_texture(resource_type):
 	var key = str(resource_type)
 	if _resource_textures.has(key):
 		return _resource_textures[key]
-	var asset_path = "res://asset/icon/resource_" + key + ".png"
-	if ResourceLoader.exists(asset_path):
-		var loaded = load(asset_path)
-		if loaded != null:
-			_resource_textures[key] = loaded
-			return loaded
+	var loaded = null
+	if key == "ecological":
+		loaded = get_icon_texture("plant_ecological")
+	elif key.begins_with("hybrid"):
+		loaded = get_icon_texture("plant_hybrid_badge")
+	else:
+		loaded = get_icon_texture("resource_" + key)
+	if loaded != null:
+		_resource_textures[key] = loaded
+		return loaded
 	var fill_color = get_resource_color(key)
 	var accent_color = fill_color.lightened(0.35)
 	var image = Image.create(28, 28, false, Image.FORMAT_RGBA8)
@@ -72,8 +106,18 @@ func get_theme():
 	_theme = theme
 	return _theme
 
-func build_plant_card(plant_definition):
-	var panel = VW.Chrome.panel_container(Vector2(170, 210), Color(0.13, 0.16, 0.22, 0.96), get_resource_color(plant_definition.fuel_type))
+func build_plant_card(plant_definition, deck_id = "base_game", card_size = Vector2(160, 210)):
+	var card_texture = get_plant_card_texture(deck_id, plant_definition)
+	if card_texture != null:
+		var card_rect = TextureRect.new()
+		card_rect.texture = card_texture
+		card_rect.custom_minimum_size = card_size
+		card_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		card_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		card_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return card_rect
+
+	var panel = VW.Chrome.panel_container(card_size, Color(0.13, 0.16, 0.22, 0.96), get_resource_color(plant_definition.fuel_type))
 	var layout = VBoxContainer.new()
 	layout.add_theme_constant_override("separation", 8)
 	panel.add_child(layout)
@@ -113,7 +157,24 @@ func build_plant_card(plant_definition):
 	return panel
 
 func build_city_marker(city_name, slot_costs = [10, 15, 20]):
-	var panel = VW.Chrome.panel_container(Vector2(130, 74), Color(0.16, 0.19, 0.25, 0.96), Color(0.65, 0.72, 0.82, 0.95))
+	var city_texture = get_token_texture("city_node")
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(130, 74)
+	if city_texture != null:
+		var style_box = StyleBoxTexture.new()
+		style_box.texture = city_texture
+		style_box.texture_margin_left = 12
+		style_box.texture_margin_right = 12
+		style_box.texture_margin_top = 12
+		style_box.texture_margin_bottom = 12
+		style_box.content_margin_left = 10
+		style_box.content_margin_right = 10
+		style_box.content_margin_top = 8
+		style_box.content_margin_bottom = 8
+		panel.add_theme_stylebox_override("panel", style_box)
+	else:
+		panel = VW.Chrome.panel_container(Vector2(130, 74), Color(0.16, 0.19, 0.25, 0.96), Color(0.65, 0.72, 0.82, 0.95))
+
 	var layout = VBoxContainer.new()
 	layout.add_theme_constant_override("separation", 4)
 	panel.add_child(layout)

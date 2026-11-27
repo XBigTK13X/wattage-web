@@ -175,6 +175,10 @@ func _draw():
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.06, 0.08, 0.11, 1.0))
 	if _map_definition == null:
 		return
+	var base_texture = VW.Assets.get_map_base_texture(_map_definition.id)
+	if base_texture != null:
+		draw_texture_rect(base_texture, Rect2(_camera_offset, base_texture.get_size() * _camera_zoom), false)
+	var badge_texture = VW.Assets.get_token_texture("connection_badge")
 	var active_regions = _public_state.get("active_regions", [])
 	var show_inactive = VW.Settings != null and VW.Settings.show_inactive_regions()
 	for edge in _map_definition.connections:
@@ -190,5 +194,9 @@ func _draw():
 		var line_color = Color(0.45, 0.54, 0.68, 0.85) if both_active else Color(0.28, 0.32, 0.38, 0.35)
 		draw_line(start_pos, end_pos, line_color, 3.0)
 		var midpoint = (start_pos + end_pos) * 0.5
-		draw_circle(midpoint, 12.0 * _camera_zoom, Color(0.12, 0.15, 0.21, 0.95))
+		if badge_texture != null:
+			var badge_radius = 14.0 * _camera_zoom
+			draw_texture_rect(badge_texture, Rect2(midpoint - Vector2(badge_radius, badge_radius), Vector2(badge_radius * 2.0, badge_radius * 2.0)), false)
+		else:
+			draw_circle(midpoint, 12.0 * _camera_zoom, Color(0.12, 0.15, 0.21, 0.95))
 		draw_string(ThemeDB.fallback_font, midpoint + Vector2(-8, 5), str(edge.cost), HORIZONTAL_ALIGNMENT_CENTER, -1, 13, Color(0.96, 0.82, 0.35))

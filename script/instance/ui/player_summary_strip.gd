@@ -39,6 +39,16 @@ func set_state(game_state):
 		house.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 		row.add_child(house)
 
+		if is_active:
+			var turn_marker = VW.Assets.get_token_texture("turn_order_marker")
+			if turn_marker != null:
+				var marker_rect = TextureRect.new()
+				marker_rect.texture = turn_marker
+				marker_rect.custom_minimum_size = Vector2(20, 20)
+				marker_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				marker_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				row.add_child(marker_rect)
+
 		var info = Label.new()
 		info.text = str(player.player_name) + ("\n*" if is_active else "\n") + str(player.elektro) + "E | Cities: " + str(player.built_cities.size()) + " | Plants: " + str(player.plants.size())
 		row.add_child(info)
