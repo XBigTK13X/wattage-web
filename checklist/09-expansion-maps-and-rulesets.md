@@ -1,4 +1,4 @@
-# 08 - Expansion Maps & Original Rulesets
+# 09 - Expansion Maps & Original Rulesets
 
 Digitization of all remaining original (non-Recharged) expansion maps in `airef/physical/map/` along with each map's unique ruleset overrides.
 

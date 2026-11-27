@@ -6,14 +6,19 @@ static func init_container():
 func _ready():
 	VW.Database.load_all()
 	var lines = []
-	var sample_map = VW.Database.get_map("sample_map")
-	if sample_map == null:
-		lines.append("FAIL: sample_map not loaded")
-	else:
-		var city_count = sample_map.cities.size()
-		var region_count = sample_map.regions.size()
-		var symmetric = sample_map.is_adjacency_symmetric()
-		lines.append("Map 'sample_map': " + str(city_count) + " cities, " + str(region_count) + " regions, symmetric=" + str(symmetric))
+	for map_check in [
+		{ id = "sample_map", cities = 6, regions = 2 },
+		{ id = "germany", cities = 42, regions = 6 },
+		{ id = "united_states", cities = 42, regions = 6 }
+	]:
+		var loaded_map = VW.Database.get_map(map_check.id)
+		if loaded_map == null:
+			lines.append("FAIL: " + map_check.id + " not loaded")
+		else:
+			var city_count = loaded_map.cities.size()
+			var region_count = loaded_map.regions.size()
+			var symmetric = loaded_map.is_adjacency_symmetric()
+			lines.append("Map '" + map_check.id + "': " + str(city_count) + "/" + str(map_check.cities) + " cities, " + str(region_count) + "/" + str(map_check.regions) + " regions, symmetric=" + str(symmetric))
 
 	var expected_decks = {
 		"base_game": 43,

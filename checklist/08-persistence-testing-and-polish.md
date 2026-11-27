@@ -1,4 +1,4 @@
-# 09 - Persistence, Testing & Polish
+# 08 - Persistence, Testing & Polish
 
 Save/load support, automated verification suites, and UX polish for host and client experiences.
 

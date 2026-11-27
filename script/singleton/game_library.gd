@@ -40,7 +40,7 @@ func list_saved_games():
 
 func create_new_game(config):
 	VW.Database.ensure_loaded()
-	var map_id = str(config.get("map_id", "sample_map"))
+	var map_id = str(config.get("map_id", "germany"))
 	var deck_id = str(config.get("deck_id", "base_game"))
 	var map_definition = VW.Database.get_map(map_id)
 	var deck = VW.Database.get_deck(deck_id)
