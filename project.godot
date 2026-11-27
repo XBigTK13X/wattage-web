@@ -1,0 +1,87 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
+[application]
+
+config/name="Volt Web"
+run/main_scene="res://scene/Bootstrap/Bootstrap.tscn"
+config/features=PackedStringArray("4.7")
+boot_splash/bg_color=Color(0.05, 0.04, 0.03, 1)
+boot_splash/show_image=false
+config/icon="res://icon.svg"
+
+[autoload]
+
+VW="*res://script/singleton/vw.gd"
+
+[display]
+
+window/size/viewport_width=1680
+window/size/viewport_height=1050
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[input]
+
+pan_up={
+"deadzone": 0.5,
+"events": []
+}
+pan_down={
+"deadzone": 0.5,
+"events": []
+}
+pan_left={
+"deadzone": 0.5,
+"events": []
+}
+pan_right={
+"deadzone": 0.5,
+"events": []
+}
+next_panel={
+"deadzone": 0.5,
+"events": []
+}
+previous_panel={
+"deadzone": 0.5,
+"events": []
+}
+confirm_action={
+"deadzone": 0.5,
+"events": []
+}
+pass_action={
+"deadzone": 0.5,
+"events": []
+}
+quick_bid={
+"deadzone": 0.5,
+"events": []
+}
+zoom_in={
+"deadzone": 0.5,
+"events": []
+}
+zoom_out={
+"deadzone": 0.5,
+"events": []
+}
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
+environment/defaults/default_environment="res://default_env.tres"

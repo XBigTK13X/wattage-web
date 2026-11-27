@@ -32,6 +32,6 @@ Host-authoritative state machine implementing the original (non-Recharged) Power
   - *Requirement*: Trigger Step 2 when a player reaches the Step 2 city threshold (and remove lowest plant), trigger Step 3 when the Step 3 card enters the market (and shrink market to 6), and trigger end-game after Phase 4 when a player reaches the end-game city threshold; determine winner by most powered cities in final Bureaucracy, then most Elektro, then most built cities.
   - *Test*: Unit test Step 2, Step 3, and end-game tiebreaker scenarios end-to-end.
 
-- [ ] **Optional 2-player Automa ("Against the Trust")**
-  - *Requirement*: Translate the 2-player automa logic from `airef/automa/src/model/automa.py`, `src/automa_card_info.py`, `card/powergrid.csv`, and `automa_start_cities` in board definitions as an optional opponent mode for solo/2p play.
-  - *Test*: Run a simulated solo vs Automa match through several turns without rule violations or deadlocks.
+- [ ] **Automa opponents: Frida & Official Robots**
+  - *Requirement*: Implement AI/automa seat controllers for any non-human table seats (2-6 total seats): **Frida** (the print-and-play automa translated from `airef/automa/src/model/automa.py`, `src/automa_card_info.py`, `card/powergrid.csv`, and `automa_start_cities`) and **Robots** (the official *Power Grid: The Robots* modular robot ruleset).
+  - *Test*: Run simulated matches filling empty seats with Frida and with Robots across 2-player and multi-player tables without rule violations or deadlocks.

@@ -5,8 +5,8 @@ Main screen presentation for the host instance displaying the shared board, mark
 ---
 
 - [ ] **Host lobby & match configuration screen**
-  - *Requirement*: Build a main menu, settings menu, and match setup screen (reusing menu layout and `VW.Chrome` nine-patch `CenterContainer` dialog patterns from `airef/dredmor/script/scene/game/main_menu.gd` and `settings_menu.gd`) to select map, plant deck, player count (2-6), player names/colors, local vs remote client seat bindings, and optional Automa/expansions.
-  - *Test*: Configure a match with 4 players on the Germany map, start the game, and verify the board initializes with the selected settings.
+  - *Requirement*: Build a main menu, settings menu, and match setup screen (reusing menu layout and `VW.Chrome` nine-patch `CenterContainer` dialog patterns from `airef/dredmor/script/scene/game/main_menu.gd` and `settings_menu.gd`) to select map, plant deck, total table seats (2-6), number of human players, automa type for remaining seats (**Frida** print-and-play or official **Robots**), player names/colors, and local vs remote client seat bindings.
+  - *Test*: Configure a 4-seat match on the Germany map with 2 humans and 2 automa seats (testing both Frida and Robots options), start the game, and verify the board initializes with the selected seat configuration.
 
 - [ ] **Interactive game map view**
   - *Requirement*: Render regions (highlighting active vs inactive regions), cities with 10/15/20 house slots, connection lines with cost badges, and pan/zoom camera controls; highlight reachable/affordable cities during Phase 4.
