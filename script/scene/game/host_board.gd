@@ -31,6 +31,8 @@ var _automa_pending = false
 var _confirm_dialog = null
 var _pending_city_id = ""
 var _last_phase = -1
+var _last_step = -1
+var _last_turn_seat = -1
 
 func _ready():
 	VW.Database.ensure_loaded()
@@ -38,8 +40,12 @@ func _ready():
 	if _game_state == null:
 		VW.Scenes.goto(VW.Scenes.MAIN_MENU)
 		return
+	VW.Audio.set_client_mode(false)
+	VW.Audio.play_map_music(_game_state.get("map_id", ""))
 	_map_definition = VW.Database.get_map(_game_state.map_id)
 	_last_phase = int(_game_state.get("phase", 1))
+	_last_step = int(_game_state.get("step", 1))
+	_last_turn_seat = _active_seat()
 	_build_gui()
 	VW.Network.peer_connected_to_host.connect(_on_peer_connected)
 	VW.Network.peer_disconnected_from_host.connect(_on_peer_disconnected)
@@ -109,6 +115,7 @@ func _build_gui():
 	_tab_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_tab_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_tab_container.add_theme_font_size_override("font_size", 16)
+	VW.Chrome.attach_focus_ring(_tab_container.get_tab_bar())
 	root_box.add_child(_tab_container)
 
 	_map_view = MapBoardView.new()
@@ -169,13 +176,42 @@ func _build_gui():
 	add_child(_confirm_dialog)
 
 	_select_tab_for_phase(int(_game_state.get("phase", 2)))
+	_tab_container.get_tab_bar().call_deferred("grab_focus")
+
+func _unhandled_input(event):
+	if _tab_container == null:
+		return
+	var tab_count = _tab_container.get_tab_count()
+	if tab_count <= 0:
+		return
+	if event.is_action_pressed("next_panel"):
+		_tab_container.current_tab = (_tab_container.current_tab + 1) % tab_count
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("previous_panel"):
+		_tab_container.current_tab = (_tab_container.current_tab - 1 + tab_count) % tab_count
+		get_viewport().set_input_as_handled()
 
 func _refresh_all():
+	var current_step = int(_game_state.get("step", 1))
 	var current_phase = int(_game_state.get("phase", 1))
+	var current_seat = _active_seat()
+	var transition_played = false
+	if current_step != _last_step:
+		_last_step = current_step
+		VW.Audio.play_sound_effect("step_transition")
+		transition_played = true
 	if current_phase != _last_phase:
 		_last_phase = current_phase
-		VW.Audio.play_sound_effect("phase_change")
+		if not transition_played:
+			VW.Audio.play_sound_effect("phase_change")
+			transition_played = true
 		_select_tab_for_phase(current_phase)
+	if current_seat != _last_turn_seat:
+		_last_turn_seat = current_seat
+		if not transition_played and current_seat >= 0:
+			var players = _game_state.get("players", [])
+			if current_seat < players.size() and str(players[current_seat].get("control_mode", "local")) == "local":
+				VW.Audio.play_sound_effect("turn_alert")
 	_map_view.set_state(_map_definition, _game_state)
 	_plant_market_panel.set_state(_game_state)
 	_resource_market_panel.set_state(_game_state)
@@ -219,9 +255,24 @@ func _update_action_feed_and_toast():
 	if seq > _last_action_seq:
 		_last_action_seq = seq
 		var event_data = _game_state.get("last_action_event", {})
+		_play_sfx_for_action_event(str(event_data.get("message", "")))
 		var text = str(event_data.get("entry", ""))
 		if text != "":
 			_play_action_toast(text)
+
+func _play_sfx_for_action_event(message_text):
+	if message_text == "":
+		return
+	if message_text.begins_with("Won Plant #") or message_text.begins_with("Claimed Plant #"):
+		VW.Audio.play_sound_effect("auction_won")
+	elif message_text.begins_with("Bid placed:") or message_text.ends_with("nominated"):
+		VW.Audio.play_sound_effect("bid_placed")
+	elif message_text.begins_with("Bought "):
+		VW.Audio.play_sound_effect("resource_bought")
+	elif message_text.begins_with("Built "):
+		VW.Audio.play_sound_effect("city_built")
+	elif message_text.begins_with("Powered ") or message_text.contains(" powered "):
+		VW.Audio.play_sound_effect("power_up")
 
 func _play_action_toast(message):
 	if _toast_panel == null or _toast_label == null:

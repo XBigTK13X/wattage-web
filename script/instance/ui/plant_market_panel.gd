@@ -49,23 +49,43 @@ func _ready():
 	_step_label.text = "Step 1"
 	header_row.add_child(_step_label)
 
+	var markets_row = HBoxContainer.new()
+	markets_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	markets_row.add_theme_constant_override("separation", 24)
+	layout.add_child(markets_row)
+
+	var actual_col = VBoxContainer.new()
+	actual_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actual_col.add_theme_constant_override("separation", 8)
+	markets_row.add_child(actual_col)
+
 	var actual_label = Label.new()
 	actual_label.text = "Actual Market"
-	layout.add_child(actual_label)
+	actual_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	actual_col.add_child(actual_label)
 
 	_actual_row = HBoxContainer.new()
 	_actual_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	_actual_row.add_theme_constant_override("separation", 18)
-	layout.add_child(_actual_row)
+	_actual_row.add_theme_constant_override("separation", 14)
+	actual_col.add_child(_actual_row)
+
+	var divider = VSeparator.new()
+	markets_row.add_child(divider)
+
+	var futures_col = VBoxContainer.new()
+	futures_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	futures_col.add_theme_constant_override("separation", 8)
+	markets_row.add_child(futures_col)
 
 	var futures_label = Label.new()
 	futures_label.text = "Futures Market"
-	layout.add_child(futures_label)
+	futures_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	futures_col.add_child(futures_label)
 
 	_futures_row = HBoxContainer.new()
 	_futures_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	_futures_row.add_theme_constant_override("separation", 18)
-	layout.add_child(_futures_row)
+	_futures_row.add_theme_constant_override("separation", 14)
+	futures_col.add_child(_futures_row)
 
 	_auction_box = VW.Chrome.panel_container(Vector2(0, 110), Color(0.14, 0.17, 0.24, 0.98), Color(0.95, 0.78, 0.28, 1.0))
 	_auction_box.visible = false

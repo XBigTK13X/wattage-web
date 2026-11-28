@@ -74,8 +74,12 @@ func _load_decks_directory():
 			var plant = PlantDefinition.from_dictionary(card_payload)
 			cards.append(plant)
 			by_number[plant.number] = plant
+		var display_name = str(payload.get("display_name", "")).strip_edges()
+		if display_name == "":
+			display_name = deck_id.replace("_", " ").capitalize()
 		_decks[deck_id] = {
 			id = deck_id,
+			display_name = display_name,
 			cards = cards,
 			by_number = by_number
 		}

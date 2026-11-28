@@ -19,6 +19,7 @@ var _map_tab_button = null
 
 func _ready():
 	VW.Database.ensure_loaded()
+	VW.Audio.set_client_mode(true)
 	if DisplayServer.get_name() != "headless":
 		DisplayServer.screen_set_keep_on(true)
 	_build_gui()
@@ -29,6 +30,7 @@ func _ready():
 	VW.Network.lan_host_discovered.connect(_on_host_discovered)
 
 func _exit_tree():
+	VW.Audio.set_client_mode(false)
 	if DisplayServer.get_name() != "headless":
 		DisplayServer.screen_set_keep_on(false)
 
@@ -85,6 +87,7 @@ func _build_gui():
 	_host_ip_input.placeholder_text = "Host IP (e.g. 192.168.1.10 or 127.0.0.1)"
 	_host_ip_input.text = "127.0.0.1"
 	_host_ip_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	VW.Chrome.attach_focus_ring(_host_ip_input)
 	connect_row.add_child(_host_ip_input)
 
 	var connect_button = VW.Chrome.styled_button("Connect", 15)
@@ -123,6 +126,7 @@ func _build_gui():
 	_views_root.add_child(_map_view)
 
 	_switch_view(0)
+	_dashboard_tab_button.call_deferred("grab_focus")
 
 func _switch_view(view_index):
 	_dashboard_view.visible = (view_index == 0)

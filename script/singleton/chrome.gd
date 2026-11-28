@@ -32,6 +32,8 @@ func attach_focus_ring(control):
 		control.focus_mode = Control.FOCUS_ALL
 	if control.has_node("_FocusRing"):
 		return control
+	if control is OptionButton or control is CheckButton or control is CheckBox:
+		control.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	var ring_texture = VW.Assets.get_ui_texture("focus_ring") if VW.Assets != null else null
 	var ring = null
 	if ring_texture != null:
@@ -127,7 +129,7 @@ func styled_button(text_value, font_size = 18):
 		button.add_theme_stylebox_override("hover", _make_nine_patch_style(hover_texture, 10, 18, 8) if hover_texture != null else normal_style)
 		button.add_theme_stylebox_override("pressed", _make_nine_patch_style(pressed_texture, 10, 18, 8) if pressed_texture != null else normal_style)
 		button.add_theme_stylebox_override("disabled", _make_nine_patch_style(disabled_texture, 10, 18, 8) if disabled_texture != null else normal_style)
-		button.add_theme_stylebox_override("focus", _make_nine_patch_style(hover_texture, 10, 18, 8) if hover_texture != null else normal_style)
+		button.add_theme_stylebox_override("focus", normal_style)
 	else:
 		var normal_box = StyleBoxFlat.new()
 		normal_box.bg_color = Color(0.18, 0.22, 0.30, 1.0)
@@ -145,6 +147,10 @@ func styled_button(text_value, font_size = 18):
 		button.add_theme_stylebox_override("normal", normal_box)
 		button.add_theme_stylebox_override("hover", hover_box)
 		button.add_theme_stylebox_override("pressed", pressed_box)
-		button.add_theme_stylebox_override("focus", hover_box)
+		button.add_theme_stylebox_override("focus", normal_box)
 	attach_focus_ring(button)
+	button.pressed.connect(func():
+		if VW.Audio != null:
+			VW.Audio.play_sound_effect("ui_click")
+	)
 	return button

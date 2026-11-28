@@ -7,6 +7,8 @@ var _games_list = null
 
 func _ready():
 	VW.Database.ensure_loaded()
+	VW.Audio.set_client_mode(false)
+	VW.Audio.play_music("menu_theme")
 	_build_gui()
 
 func _build_gui():
@@ -91,6 +93,7 @@ func _build_gui():
 	scroll.add_child(_games_list)
 
 	_refresh_games_list()
+	new_match_button.call_deferred("grab_focus")
 
 func _refresh_games_list():
 	for child in _games_list.get_children():

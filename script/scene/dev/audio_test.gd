@@ -42,7 +42,7 @@ func _ready():
 		cue_button.pressed.connect(_on_cue_pressed.bind(cue_name))
 		layout.add_child(cue_button)
 
-	var mute_button = VW.Chrome.styled_button("Toggle Audio Mute")
+	var mute_button = VW.Chrome.styled_button("Toggle Master Mute")
 	mute_button.pressed.connect(_on_mute_toggled)
 	layout.add_child(mute_button)
 
@@ -51,6 +51,8 @@ func _on_cue_pressed(cue_name):
 	_status_label.text = "Cue '" + cue_name + "' played=" + str(played)
 
 func _on_mute_toggled():
-	var next_enabled = not VW.Settings.audio_enabled()
-	VW.Settings.change("game", "audio_enabled", next_enabled)
-	_status_label.text = "Audio enabled: " + str(next_enabled)
+	var current_volume = VW.Settings.master_volume_percent()
+	var next_volume = 0 if current_volume > 0 else 100
+	VW.Settings.change("game", "audio_volume_master_percent", next_volume)
+	VW.Audio.apply_volume_settings()
+	_status_label.text = "Master volume: " + str(next_volume) + "%"

@@ -109,11 +109,11 @@ static func create_random_profiles(robot_count):
 	var profiles = []
 	for index in range(robot_count):
 		profiles.append({
-			first_city = pool_one[index % pool_one.size()],
-			auction = pool_two[index % pool_two.size()],
-			resource = pool_three[index % pool_three.size()],
-			build = pool_four[index % pool_four.size()],
-			ability = pool_five[index % pool_five.size()]
+			first_city = pool_one.pop_back() if not pool_one.is_empty() else SLOT_ONE_POOL[0],
+			auction = pool_two.pop_back() if not pool_two.is_empty() else SLOT_TWO_POOL[0],
+			resource = pool_three.pop_back() if not pool_three.is_empty() else SLOT_THREE_POOL[0],
+			build = pool_four.pop_back() if not pool_four.is_empty() else SLOT_FOUR_POOL[0],
+			ability = pool_five.pop_back() if not pool_five.is_empty() else SLOT_FIVE_POOL[0]
 		})
 	return profiles
 

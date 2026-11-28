@@ -26,7 +26,7 @@ func _ready():
 	layout.add_child(title_label)
 
 	var status_label = Label.new()
-	status_label.text = "EventLog entries: " + str(VW.EventLog.get_history().size()) + " | Audio enabled: " + str(VW.Settings.audio_enabled())
+	status_label.text = "EventLog entries: " + str(VW.EventLog.get_history().size()) + " | Master volume: " + str(VW.Settings.master_volume_percent()) + "%"
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	layout.add_child(status_label)
 
